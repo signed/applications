@@ -12,11 +12,41 @@ class ApplicationsHome:
     def __init__(self, path):
         self.path = path
 
-    def already_downloaded(self, application):
+    def ensure_exists(self):
+        mkdir_p(self.path)
         pass
 
     def install(self, application):
-        pass
+        self._ensure_installation_directory_exists(application)
+        self._ensure_archive_was_downloaded(application)
+        self._extract_archive(application)
+
+    def _ensure_archive_was_downloaded(self, application):
+        if not self._archive_already_downloaded(application):
+            response = requests.get(applicationToInstall.url())
+            print response.status_code
+            print response.url
+
+            with open(self._archive_path_for(application), "wb") as code:
+                code.write(response.content)
+
+    def _extract_archive(self, application):
+        with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
+            archive.extractall(self._directory_for(application))
+
+    def _archive_path_for(self, application):
+        return join(self._directory_for(application), applicationToInstall.filename())
+
+    def _ensure_installation_directory_exists(self, application):
+        mkdir_p(self._directory_for(application))
+
+    def _directory_for(self, application):
+        data = {'base_path': self.path, 'application_name': application.name}
+        target_directory = expanduser("%(base_path)s/%(application_name)s" % data)
+        return target_directory
+
+    def _archive_already_downloaded(self, application):
+        return False
 
 
 class Application:
@@ -45,27 +75,13 @@ def mkdir_p(path):
 
 if __name__ == '__main__':
     installationDirectory = ApplicationsHome(expanduser('~/applications_dev/'))
+    installationDirectory.ensure_exists()
     mirror = 'http://localhost:8080/files'
     maven_download_url_template = mirror + '/apache/maven/maven-3/%(version)s/binaries/%(filename)s'
     maven_archive_template = 'apache-maven-%(version)s-bin.zip'
     applicationToInstall = Application('maven', '3.2.5', maven_download_url_template, maven_archive_template)
 
-    target_directory = expanduser(
-        "~/applications_dev/%(application_name)s" % {'application_name': applicationToInstall.name})
-    mkdir_p(target_directory)
-
-    archive_file = join(target_directory, applicationToInstall.filename())
-
-    response = requests.get(applicationToInstall.url())
-    print response.status_code
-    print response.url
-
-    with open(archive_file, "wb") as code:
-        code.write(response.content)
-
-    with zipfile.ZipFile(archive_file, "r") as archive:
-        archive.extractall(target_directory)
-
+    installationDirectory.install(applicationToInstall)
 
 
 
