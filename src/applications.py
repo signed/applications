@@ -4,6 +4,7 @@ from os.path import join
 import os
 import errno
 import zipfile
+import tarfile
 
 import requests
 
@@ -14,7 +15,7 @@ class ApplicationsHome:
 
     def ensure_exists(self):
         mkdir_p(self.path)
-        mkdir_p(self.path+"/bin")
+        mkdir_p(self.path + "/bin")
         pass
 
     def install(self, application):
@@ -23,10 +24,11 @@ class ApplicationsHome:
         self._extract_archive(application)
 
     def _ensure_installation_directory_exists(self, application):
-        mkdir_p(self._directory_for(application))
+        mkdir_p(self._parent_directory_for(application))
 
     def _ensure_archive_was_downloaded(self, application):
         if not self._archive_already_downloaded(application):
+            print(application.url())
             response = requests.get(application.url())
             print response.status_code
             print response.url
@@ -37,19 +39,41 @@ class ApplicationsHome:
             print 'already downloaded ' + application.filename()
 
     def _extract_archive(self, application):
-        with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
-            archive.extractall(self._directory_for(application))
+        if self._archive_already_extracted(application):
+            print 'already extracted ' + application.filename()
+            return
+
+        if application.filename().endswith('.zip'):
+            with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
+                archive.extractall(self._parent_directory_for(application))
+
+        elif application.filename().endswith('.tar.gz'):
+            with tarfile.open(self._archive_path_for(application), 'r') as tar:
+                for tarinfo in tar.getmembers():
+                    path_elements = split_path(tarinfo.path)
+                    path_elements[0] = application.version
+                    destination = os.path.join(self._parent_directory_for(application), os.path.join(*path_elements))
+                    tar.extract(tarinfo, destination)
+
+        else:
+            raise ValueError("Unsupported archive type" + application.filename())
 
     def _archive_path_for(self, application):
-        return join(self._directory_for(application), application.filename())
+        return join(self._parent_directory_for(application), application.filename())
 
-    def _directory_for(self, application):
+    def _parent_directory_for(self, application):
         data = {'base_path': self.path, 'application_name': application.name}
         target_directory = expanduser("%(base_path)s/%(application_name)s" % data)
         return target_directory
 
+    def _directory_for(self, application):
+        return os.path.join(self._parent_directory_for(application), application.version)
+
     def _archive_already_downloaded(self, application):
         return os.path.isfile(self._archive_path_for(application))
+
+    def _archive_already_extracted(self, application):
+        return os.path.isdir(self._directory_for(application))
 
 
 class Application:
@@ -76,15 +100,31 @@ def mkdir_p(path):
             raise
 
 
+def split_path(p):
+    a, b = os.path.split(p)
+    return (split_path(a) if len(a) and len(b) else []) + [b]
+
+
 if __name__ == '__main__':
     installationDirectory = ApplicationsHome(expanduser('~/applications_dev/'))
     installationDirectory.ensure_exists()
-    mirror = 'http://localhost:8080/files'
-    maven_download_url_template = mirror + '/apache/maven/maven-3/%(version)s/binaries/%(filename)s'
+
+    maven_mirror = 'hard to detect right now'
+    maven_mirror = 'http://localhost:8080/files'
     maven_archive_template = 'apache-maven-%(version)s-bin.zip'
+    maven_download_url_template = maven_mirror + '/' + 'apache/maven/maven-3/%(version)s/binaries/%(filename)s'
 
     installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template, maven_archive_template))
     installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_archive_template))
+
+    jetbrains_mirror = 'http://download.jetbrains.com/'
+    jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
+
+    idea_archive_template = 'ideaIU-%(version)s.tar.gz'
+    idea_download_url_template = jetbrains_mirror + "/" + 'idea/%(filename)s'
+    installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template, idea_archive_template))
+    installationDirectory.install(Application('idea', '14.1', idea_download_url_template, idea_archive_template))
+
 
 
 
