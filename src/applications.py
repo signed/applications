@@ -29,6 +29,9 @@ class ApplicationsHome:
 
             with open(self._archive_path_for(application), "wb") as code:
                 code.write(response.content)
+        else:
+            print 'already downloaded ' + application.filename()
+
 
     def _extract_archive(self, application):
         with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
@@ -46,7 +49,7 @@ class ApplicationsHome:
         return target_directory
 
     def _archive_already_downloaded(self, application):
-        return False
+        return os.path.isfile(self._archive_path_for(application))
 
 
 class Application:
