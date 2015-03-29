@@ -14,6 +14,7 @@ class ApplicationsHome:
 
     def ensure_exists(self):
         mkdir_p(self.path)
+        mkdir_p(self.path+"/bin")
         pass
 
     def install(self, application):
@@ -26,7 +27,7 @@ class ApplicationsHome:
 
     def _ensure_archive_was_downloaded(self, application):
         if not self._archive_already_downloaded(application):
-            response = requests.get(applicationToInstall.url())
+            response = requests.get(application.url())
             print response.status_code
             print response.url
 
@@ -40,7 +41,7 @@ class ApplicationsHome:
             archive.extractall(self._directory_for(application))
 
     def _archive_path_for(self, application):
-        return join(self._directory_for(application), applicationToInstall.filename())
+        return join(self._directory_for(application), application.filename())
 
     def _directory_for(self, application):
         data = {'base_path': self.path, 'application_name': application.name}
@@ -59,7 +60,7 @@ class Application:
         self.file_name_template = file_name_template
 
     def filename(self):
-        return self.file_name_template % {'version': applicationToInstall.version}
+        return self.file_name_template % {'version': self.version}
 
     def url(self):
         return self.url_template % {'version': self.version, 'filename': self.filename()}
@@ -81,9 +82,9 @@ if __name__ == '__main__':
     mirror = 'http://localhost:8080/files'
     maven_download_url_template = mirror + '/apache/maven/maven-3/%(version)s/binaries/%(filename)s'
     maven_archive_template = 'apache-maven-%(version)s-bin.zip'
-    applicationToInstall = Application('maven', '3.2.5', maven_download_url_template, maven_archive_template)
 
-    installationDirectory.install(applicationToInstall)
+    installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template, maven_archive_template))
+    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_archive_template))
 
 
 
