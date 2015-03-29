@@ -32,7 +32,6 @@ class ApplicationsHome:
         else:
             print 'already downloaded ' + application.filename()
 
-
     def _extract_archive(self, application):
         with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
             archive.extractall(self._directory_for(application))
