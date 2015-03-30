@@ -29,6 +29,7 @@ class ApplicationsHome:
     def _ensure_archive_was_downloaded(self, application):
         if self._archive_already_downloaded(application):
             print 'already downloaded ' + application.filename()
+            return
 
         print(application.url())
         response = requests.get(application.url())
