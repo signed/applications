@@ -51,9 +51,7 @@ class ApplicationsHome:
         return join(self._parent_directory_for(application), application.filename())
 
     def _parent_directory_for(self, application):
-        data = {'base_path': self.path, 'application_name': application.name}
-        target_directory = os.path.join(self.path, application.name)
-        return target_directory
+        return os.path.join(self.path, application.name)
 
     def _directory_for(self, application):
         return os.path.join(self._parent_directory_for(application), application.version)
