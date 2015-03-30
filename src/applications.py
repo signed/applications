@@ -4,6 +4,7 @@ from os.path import join
 import os
 import errno
 import tarfile
+import urlparse
 
 import requests
 
@@ -84,17 +85,18 @@ class ArchiveExtractor:
 
 
 class Application:
-    def __init__(self, name, version, url_template, file_name_template):
+    def __init__(self, name, version, url_template):
         self.name = name
         self.version = version
         self.url_template = url_template
-        self.file_name_template = file_name_template
 
     def filename(self):
-        return self.file_name_template % {'version': self.version}
+        parsed_url = urlparse.urlparse(self.url())
+        filename = os.path.basename(parsed_url.path)
+        return filename
 
     def url(self):
-        return self.url_template % {'version': self.version, 'filename': self.filename()}
+        return self.url_template % {'version': self.version}
 
 
 def mkdir_p(path):
@@ -118,16 +120,14 @@ if __name__ == '__main__':
 
     maven_mirror = 'http://artfiles.org/apache.org'
     maven_mirror = 'http://localhost:8080/files/apache'
-    maven_archive_template = 'apache-maven-%(version)s-bin.tar.gz'
-    maven_download_url_template = maven_mirror + '/' + 'maven/maven-3/%(version)s/binaries/%(filename)s'
+    maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
 
-    installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template, maven_archive_template))
-    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_archive_template))
+    installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template))
+    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template))
 
     jetbrains_mirror = 'http://download.jetbrains.com'
     jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
 
-    idea_archive_template = 'ideaIU-%(version)s.tar.gz'
-    idea_download_url_template = jetbrains_mirror + "/" + 'idea/%(filename)s'
-    installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template, idea_archive_template))
-    installationDirectory.install(Application('idea', '14.1', idea_download_url_template, idea_archive_template))
+    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
+    installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
+    installationDirectory.install(Application('idea', '14.1', idea_download_url_template))
