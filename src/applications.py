@@ -12,16 +12,32 @@ import requests
 class ApplicationsHome:
     def __init__(self, path):
         self.path = expanduser(path)
+        self.configuration_path = os.path.join(self.path, "etc")
 
     def ensure_exists(self):
         mkdir_p(self.path)
-        mkdir_p(self.path + "/bin")
-        pass
+        mkdir_p(self.configuration_path)
 
     def install(self, application):
         self._ensure_installation_directory_exists(application)
         self._ensure_archive_was_downloaded(application)
         self._extract_archive(application)
+
+        path = application.metadata_for('path')
+        if path is not None:
+            path_to_path_file = os.path.join(self.configuration_path, application.name + '.path')
+            with open(path_to_path_file, 'wb') as path_file:
+                path_file.write(path % self._template_data_for(application))
+
+        env = application.metadata_for('env')
+        if env is not None:
+            path_to_env_file = os.path.join(self.configuration_path, application.name + '.env')
+            with open(path_to_env_file, 'wb') as env_file:
+                template_content = '\n'.join(map(lambda (key, value): key + '="' + value + '"', env.items()))
+                env_file.write(template_content % self._template_data_for(application))
+
+    def _template_data_for(self, application):
+        return {'installation_directory': self._directory_for(application)}
 
     def _ensure_installation_directory_exists(self, application):
         mkdir_p(self._parent_directory_for(application))
@@ -84,10 +100,11 @@ class ArchiveExtractor:
 
 
 class Application:
-    def __init__(self, name, version, url_template):
+    def __init__(self, name, version, url_template, metadata=None):
         self.name = name
         self.version = version
         self.url_template = url_template
+        self.metadata = metadata if metadata else {}
 
     def filename(self):
         parsed_url = urlparse.urlparse(self.url())
@@ -96,6 +113,9 @@ class Application:
 
     def url(self):
         return self.url_template % {'version': self.version}
+
+    def metadata_for(self, key):
+        return self.metadata.get(key)
 
 
 def mkdir_p(path):
@@ -120,14 +140,23 @@ if __name__ == '__main__':
     java_mirror = 'http://dl.dropboxusercontent.com/u/176191/boxen'
     java_mirror = 'http://localhost:8080/files'
     java_download_url_template = java_mirror = java_mirror + '/java/jdk-%(version)s-linux-x64.tar.gz'
-    installationDirectory.install(Application('java', '8u40', java_download_url_template))
+
+    java_metadata = {
+        'path': '%(installation_directory)s/bin',
+        'env': {
+            'JAVA_HOME': '%(installation_directory)s'
+        }
+    }
+    installationDirectory.install(Application('java', '8u40', java_download_url_template, java_metadata))
 
     maven_mirror = 'http://artfiles.org/apache.org'
     maven_mirror = 'http://localhost:8080/files/apache'
     maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
 
-    installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template))
-    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template))
+    maven_metadata = {
+        'path': '%(installation_directory)s/bin'
+    }
+    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_metadata))
 
     jetbrains_mirror = 'http://download.jetbrains.com'
     jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
@@ -137,5 +166,5 @@ if __name__ == '__main__':
     installationDirectory.install(Application('idea', '14.1', idea_download_url_template))
 
     xmind_mirror = 'http://www.xmind.net'
-    xmind_download_url_template =  xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
+    xmind_download_url_template = xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
     # installationDirectory.install(Application('xmind', '3.5.1', xmind_download_url_template))
