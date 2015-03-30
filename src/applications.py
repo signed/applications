@@ -11,7 +11,7 @@ import requests
 
 class ApplicationsHome:
     def __init__(self, path):
-        self.path = path
+        self.path = expanduser(path)
 
     def ensure_exists(self):
         mkdir_p(self.path)
@@ -43,27 +43,17 @@ class ApplicationsHome:
             print 'already extracted ' + application.filename()
             return
 
-        if application.filename().endswith('.zip'):
-            with zipfile.ZipFile(self._archive_path_for(application), "r") as archive:
-                archive.extractall(self._parent_directory_for(application))
+        archive_path = self._archive_path_for(application)
+        target_directory_path = self._directory_for(application)
 
-        elif application.filename().endswith('.tar.gz'):
-            with tarfile.open(self._archive_path_for(application), 'r') as tar:
-                for tarinfo in tar.getmembers():
-                    path_elements = split_path(tarinfo.path)
-                    path_elements[0] = application.version
-                    destination = os.path.join(self._parent_directory_for(application), os.path.join(*path_elements))
-                    tar.extract(tarinfo, destination)
-
-        else:
-            raise ValueError("Unsupported archive type" + application.filename())
+        ArchiveExtractor().extract(archive_path, target_directory_path)
 
     def _archive_path_for(self, application):
         return join(self._parent_directory_for(application), application.filename())
 
     def _parent_directory_for(self, application):
         data = {'base_path': self.path, 'application_name': application.name}
-        target_directory = expanduser("%(base_path)s/%(application_name)s" % data)
+        target_directory = os.path.join(self.path, application.name)
         return target_directory
 
     def _directory_for(self, application):
@@ -74,6 +64,30 @@ class ApplicationsHome:
 
     def _archive_already_extracted(self, application):
         return os.path.isdir(self._directory_for(application))
+
+
+class ArchiveExtractor:
+    def __init__(self):
+        pass
+
+    def extract(self, archive_path, target_directory_path):
+        archive_name = os.path.basename(archive_path)
+        parent_directory = os.path.split(target_directory_path)[0]
+        target_directory_name = os.path.basename(target_directory_path)
+
+        if archive_path.endswith('.zip'):
+            with zipfile.ZipFile(archive_path, "r") as archive:
+                archive.extractall(parent_directory)
+
+        elif archive_path.endswith('.tar.gz'):
+            with tarfile.open(archive_path, 'r') as tar:
+                for tarinfo in tar.getmembers():
+                    path_elements = split_path(tarinfo.path)
+                    path_elements[0] = target_directory_name
+                    destination = os.path.join(parent_directory, os.path.join(*path_elements))
+                    tar.extract(tarinfo, destination)
+        else:
+            raise ValueError("Unsupported archive type" + archive_name)
 
 
 class Application:
