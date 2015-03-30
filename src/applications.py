@@ -131,3 +131,7 @@ if __name__ == '__main__':
     idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
     installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
     installationDirectory.install(Application('idea', '14.1', idea_download_url_template))
+
+    xmind_mirror = 'http://www.xmind.net'
+    xmind_download_url_template =  xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
+    # installationDirectory.install(Application('xmind', '3.5.1', xmind_download_url_template))
