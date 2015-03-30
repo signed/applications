@@ -3,7 +3,6 @@ from os.path import expanduser
 from os.path import join
 import os
 import errno
-import zipfile
 import tarfile
 
 import requests
@@ -75,11 +74,7 @@ class ArchiveExtractor:
         parent_directory = os.path.split(target_directory_path)[0]
         target_directory_name = os.path.basename(target_directory_path)
 
-        if archive_path.endswith('.zip'):
-            with zipfile.ZipFile(archive_path, "r") as archive:
-                archive.extractall(parent_directory)
-
-        elif archive_path.endswith('.tar.gz'):
+        if archive_path.endswith('.tar.gz'):
             with tarfile.open(archive_path, 'r') as tar:
                 for tarinfo in tar.getmembers():
                     path_elements = split_path(tarinfo.path)
@@ -123,15 +118,15 @@ if __name__ == '__main__':
     installationDirectory = ApplicationsHome(expanduser('~/applications_dev/'))
     installationDirectory.ensure_exists()
 
-    maven_mirror = 'hard to detect right now'
-    maven_mirror = 'http://localhost:8080/files'
-    maven_archive_template = 'apache-maven-%(version)s-bin.zip'
-    maven_download_url_template = maven_mirror + '/' + 'apache/maven/maven-3/%(version)s/binaries/%(filename)s'
+    maven_mirror = 'http://artfiles.org/apache.org'
+    maven_mirror = 'http://localhost:8080/files/apache'
+    maven_archive_template = 'apache-maven-%(version)s-bin.tar.gz'
+    maven_download_url_template = maven_mirror + '/' + 'maven/maven-3/%(version)s/binaries/%(filename)s'
 
     installationDirectory.install(Application('maven', '3.2.5', maven_download_url_template, maven_archive_template))
     installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_archive_template))
 
-    jetbrains_mirror = 'http://download.jetbrains.com/'
+    jetbrains_mirror = 'http://download.jetbrains.com'
     jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
 
     idea_archive_template = 'ideaIU-%(version)s.tar.gz'
