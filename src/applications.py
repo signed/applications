@@ -117,6 +117,11 @@ if __name__ == '__main__':
     installationDirectory = ApplicationsHome(expanduser('~/applications_dev/'))
     installationDirectory.ensure_exists()
 
+    java_mirror = 'http://dl.dropboxusercontent.com/u/176191/boxen'
+    java_mirror = 'http://localhost:8080/files'
+    java_download_url_template = java_mirror = java_mirror + '/java/jdk-%(version)s-linux-x64.tar.gz'
+    installationDirectory.install(Application('java', '8u40', java_download_url_template))
+
     maven_mirror = 'http://artfiles.org/apache.org'
     maven_mirror = 'http://localhost:8080/files/apache'
     maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
