@@ -27,16 +27,15 @@ class ApplicationsHome:
         mkdir_p(self._parent_directory_for(application))
 
     def _ensure_archive_was_downloaded(self, application):
-        if not self._archive_already_downloaded(application):
-            print(application.url())
-            response = requests.get(application.url())
-            print response.status_code
-            print response.url
-
-            with open(self._archive_path_for(application), "wb") as code:
-                code.write(response.content)
-        else:
+        if self._archive_already_downloaded(application):
             print 'already downloaded ' + application.filename()
+
+        print(application.url())
+        response = requests.get(application.url())
+        print response.status_code
+        with open(self._archive_path_for(application), "wb") as code:
+            code.write(response.content)
+
 
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
