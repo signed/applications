@@ -131,7 +131,3 @@ if __name__ == '__main__':
     idea_download_url_template = jetbrains_mirror + "/" + 'idea/%(filename)s'
     installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template, idea_archive_template))
     installationDirectory.install(Application('idea', '14.1', idea_download_url_template, idea_archive_template))
-
-
-
-
