@@ -36,7 +36,6 @@ class ApplicationsHome:
         with open(self._archive_path_for(application), "wb") as code:
             code.write(response.content)
 
-
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
             print 'already extracted ' + application.filename()
