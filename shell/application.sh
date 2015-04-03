@@ -1,5 +1,5 @@
 source_file(){
-    source $1
+    . $1
 }
 
 add_to_path(){
