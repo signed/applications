@@ -4,8 +4,8 @@ add_to_path(){
         return
     fi
 
-    if [ ":$STANDIN:" != *":$1:"* ]; then
-        STANDIN="$1:${STANDIN:+"$STANDIN"}"
+    if [ ":$PATH:" != *":$1:"* ]; then
+        PATH="$1:${PATH:+"$PATH"}"
     fi
 }
 
