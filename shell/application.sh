@@ -9,8 +9,11 @@ add_to_path(){
     fi
 }
 
+application_directory='/tmp'
+configuration_directory="${application_directory}/etc"
+
 # export all declared environment variables
-for file in $(find etc/*.env -type f)
+for file in $(find ${configuration_directory}/*.env -type f)
 do
     for path_entry in $(sed -E '$s/(.*\S+.*)/\1\n/' ${file})
     do
@@ -19,7 +22,7 @@ do
 done
 
 # prepend all declared paths to the PATH
-for file in $(find etc/*.path -type f)
+for file in $(find ${configuration_directory}/*.path -type f)
 do
     for path_entry in $(sed -E '$s/(.*\S+.*)/\1\n/' ${file})
     do
