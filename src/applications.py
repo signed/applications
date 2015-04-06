@@ -48,10 +48,13 @@ class ApplicationsHome:
             return
 
         print(application.url())
-        response = requests.get(application.url())
+        response = requests.get(application.url(), stream=True)
         print response.status_code
-        with open(self._archive_path_for(application), "wb") as code:
-            code.write(response.content)
+        with open(self._archive_path_for(application), "wb") as storage_file:
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:  # filter out keep-alive new chunks
+                    storage_file.write(chunk)
+                    storage_file.flush()
 
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
