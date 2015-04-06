@@ -5,8 +5,17 @@ import os
 import errno
 import tarfile
 import urlparse
+import sys
 
 import requests
+
+
+def _search_path_for(pathname_suffix):
+    candidates = [os.path.join(directory, pathname_suffix) for directory in sys.path]
+    try:
+        return filter(os.path.exists, candidates)[0]
+    except IndexError:
+        return None
 
 
 class ApplicationsHome:
@@ -17,6 +26,7 @@ class ApplicationsHome:
     def ensure_exists(self):
         mkdir_p(self.path)
         mkdir_p(self.configuration_path)
+        self._write_rc_file()
 
     def install(self, application):
         self._ensure_installation_directory_exists(application)
@@ -35,6 +45,15 @@ class ApplicationsHome:
             with open(path_to_env_file, 'wb') as env_file:
                 template_content = '\n'.join(map(lambda (key, value): key + '="' + value + '"', env.items()))
                 env_file.write(template_content % self._template_data_for(application))
+
+    def _write_rc_file(self):
+        path_to_rc_script = _search_path_for('shell/application.sh')
+        with open(path_to_rc_script, 'r') as rc_file:
+            rc_file_template = rc_file.read()
+        path_to_destination = os.path.join(self.path, 'application.rc')
+        with open(path_to_destination, 'w')as rc_file_installed:
+            replacement = "application_directory='%(path)s'" % {'path': self.path}
+            rc_file_installed.write(rc_file_template.replace("application_directory='/tmp'", replacement))
 
     def _template_data_for(self, application):
         return {'installation_directory': self._directory_for(application)}
