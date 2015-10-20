@@ -156,7 +156,7 @@ def split_path(p):
 
 
 if __name__ == '__main__':
-    installationDirectory = ApplicationsHome(expanduser('~/applications_dev/'))
+    installationDirectory = ApplicationsHome(expanduser('~/apps/'))
     installationDirectory.ensure_exists()
 
     java_mirror = 'http://dl.dropboxusercontent.com/u/176191/boxen'
