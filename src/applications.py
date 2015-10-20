@@ -172,20 +172,20 @@ if __name__ == '__main__':
     installationDirectory.install(Application('java', '8u40', java_download_url_template, java_metadata))
 
     maven_mirror = 'http://artfiles.org/apache.org'
-    maven_mirror = 'http://localhost:8080/files/apache'
+    #maven_mirror = 'http://localhost:8080/files/apache'
     maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
 
     maven_metadata = {
         'path': '%(installation_directory)s/bin'
     }
-    installationDirectory.install(Application('maven', '3.3.1', maven_download_url_template, maven_metadata))
+    installationDirectory.install(Application('maven', '3.3.3', maven_download_url_template, maven_metadata))
 
     jetbrains_mirror = 'http://download.jetbrains.com'
-    jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
+    #jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
 
-    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
-    installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
-    installationDirectory.install(Application('idea', '14.1', idea_download_url_template))
+    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version).tar.gz'
+    #installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
+    installationDirectory.install(Application('idea', '14.1.5', idea_download_url_template))
 
     xmind_mirror = 'http://www.xmind.net'
     xmind_download_url_template = xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
