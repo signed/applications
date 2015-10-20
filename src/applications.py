@@ -169,7 +169,7 @@ if __name__ == '__main__':
             'JAVA_HOME': '%(installation_directory)s'
         }
     }
-    installationDirectory.install(Application('java', '8u40', java_download_url_template, java_metadata))
+    #installationDirectory.install(Application('java', '8u40', java_download_url_template, java_metadata))
 
     maven_mirror = 'http://artfiles.org/apache.org'
     #maven_mirror = 'http://localhost:8080/files/apache'
