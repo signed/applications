@@ -12,3 +12,6 @@ runt python application.py
 
 ## Shortcuts ##
 1. Krunner windows+space
+
+## Desktop ##
+1. Disable Screen Edges actions
