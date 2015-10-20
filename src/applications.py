@@ -180,6 +180,10 @@ if __name__ == '__main__':
     }
     installationDirectory.install(Application('maven', '3.3.3', maven_download_url_template, maven_metadata))
 
+
+    idea_metadata = {
+        'path': '%(installation_directory)s/bin'
+    }
     jetbrains_mirror = 'http://download.jetbrains.com'
     #jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
 
