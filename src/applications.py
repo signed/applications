@@ -183,7 +183,7 @@ if __name__ == '__main__':
     jetbrains_mirror = 'http://download.jetbrains.com'
     #jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
 
-    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version).tar.gz'
+    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
     #installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
     installationDirectory.install(Application('idea', '14.1.5', idea_download_url_template))
 
