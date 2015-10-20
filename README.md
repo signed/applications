@@ -24,3 +24,8 @@ runt python application.py
 ### Ruby ###
 1. install rbenv
 1. install installer rbenv plugin
+
+## Software ##
+
+1. Keepass
+1. pip
