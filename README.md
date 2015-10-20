@@ -4,6 +4,9 @@ runt python application.py
 
 # stuff to automate #
 
+## automation tool ##
+1. fix archive extraction
+
 ## Dolphin ##
 1. Same settings for all folders
 1. Show menu bar
@@ -15,3 +18,9 @@ runt python application.py
 
 ## Desktop ##
 1. Disable Screen Edges actions
+
+
+## Development ##
+### Ruby ###
+1. install rbenv
+1. install installer rbenv plugin
