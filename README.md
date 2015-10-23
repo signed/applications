@@ -24,8 +24,17 @@ runt python application.py
 ### Ruby ###
 1. install rbenv
 1. install installer rbenv plugin
+1. apt-get install -y libssl-dev libreadline-dev zlib1g-dev
+1. https://github.com/sstephenson/rbenv
+1. https://github.com/sstephenson/ruby-build#readme
 
 ## Software ##
 
 1. Keepass
 1. pip
+1. Audacios
+1. etckeeper
+
+## Configuration ##
+
+https://help.github.com/articles/caching-your-github-password-in-git/
