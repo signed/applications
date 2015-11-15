@@ -185,7 +185,7 @@ def intellij():
     jetbrains_mirror = 'http://download.jetbrains.com'
     # jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
     idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
-    return Application('idea', '14.1.5', idea_download_url_template, idea_metadata)
+    return Application('idea', '15.0.1', idea_download_url_template, idea_metadata)
 
 
 def xmind():
