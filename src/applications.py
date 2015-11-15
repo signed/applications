@@ -50,9 +50,10 @@ class _MyHackedTarFile(tarfile.TarFile):
 
 
 class ApplicationsHome:
-    def __init__(self, path):
+    def __init__(self, path, downloader):
         self.path = expanduser(path)
         self.configuration_path = os.path.join(self.path, "etc")
+        self.downloader = downloader
 
     def ensure_exists(self):
         mkdir_p(self.path)
@@ -94,18 +95,8 @@ class ApplicationsHome:
         mkdir_p(self._parent_directory_for(application))
 
     def _ensure_archive_was_downloaded(self, application):
-        if self._archive_already_downloaded(application):
-            print('already downloaded ' + application.filename())
-            return
-
-        print(application.url())
-        response = requests.get(application.url(), stream=True)
-        print(response.status_code)
-        with open(self._archive_path_for(application), "wb") as storage_file:
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    storage_file.write(chunk)
-                    storage_file.flush()
+        destination = self._archive_path_for(application)
+        self.downloader.download(application, destination)
 
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
@@ -138,11 +129,24 @@ class ApplicationsHome:
     def _directory_for(self, application):
         return os.path.join(self._parent_directory_for(application), application.version)
 
-    def _archive_already_downloaded(self, application):
-        return os.path.isfile(self._archive_path_for(application))
-
     def _archive_already_extracted(self, application):
         return os.path.isdir(self._directory_for(application))
+
+
+class Downloader:
+    def download(self, application, destination):
+        if os.path.isfile(destination):
+            print('already downloaded ' + application.filename())
+            return
+
+        print(application.url())
+        response = requests.get(application.url(), stream=True)
+        print(response.status_code)
+        with open(destination, "wb") as storage_file:
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:  # filter out keep-alive new chunks
+                    storage_file.write(chunk)
+                    storage_file.flush()
 
 
 class ArchiveExtractor:
@@ -233,7 +237,7 @@ def xmind():
 
 
 if __name__ == '__main__':
-    installationDirectory = ApplicationsHome(expanduser('~/apps/'))
+    installationDirectory = ApplicationsHome(expanduser('~/apps/'), Downloader())
     installationDirectory.ensure_exists()
 
     # installationDirectory.install(oracle_java())
