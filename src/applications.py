@@ -32,6 +32,7 @@ class ApplicationsHome:
         self._ensure_installation_directory_exists(application)
         self._ensure_archive_was_downloaded(application)
         self._extract_archive(application)
+        self._ensure_current_symlink_is_up_to_date(application)
 
         path = application.metadata_for('path')
         if path is not None:
@@ -56,7 +57,7 @@ class ApplicationsHome:
             rc_file_installed.write(rc_file_template.replace("application_directory='/tmp'", replacement))
 
     def _template_data_for(self, application):
-        return {'installation_directory': self._directory_for(application)}
+        return {'installation_directory': self._current_symlink_path_for(application)}
 
     def _ensure_installation_directory_exists(self, application):
         mkdir_p(self._parent_directory_for(application))
@@ -84,6 +85,18 @@ class ApplicationsHome:
         target_directory_path = self._directory_for(application)
 
         ArchiveExtractor().extract(archive_path, target_directory_path)
+
+    def _ensure_current_symlink_is_up_to_date(self, application):
+        current_sym_link = self._current_symlink_path_for(application)
+
+        if os.path.islink(current_sym_link):
+            os.unlink(current_sym_link)
+
+        extract_directory = self._directory_for(application)
+        os.symlink(extract_directory+'/', current_sym_link)
+
+    def _current_symlink_path_for(self, application):
+        return join(self._parent_directory_for(application), 'current')
 
     def _archive_path_for(self, application):
         return join(self._parent_directory_for(application), application.filename())
