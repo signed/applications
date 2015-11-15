@@ -2,11 +2,9 @@
 from os.path import expanduser
 from os.path import join
 import os
-import errno
 import tarfile
 import urllib.parse
 import sys
-
 import requests
 
 
@@ -93,7 +91,7 @@ class ApplicationsHome:
             os.unlink(current_sym_link)
 
         extract_directory = self._directory_for(application)
-        os.symlink(extract_directory+'/', current_sym_link)
+        os.symlink(extract_directory + '/', current_sym_link)
 
     def _current_symlink_path_for(self, application):
         return join(self._parent_directory_for(application), 'current')
@@ -123,13 +121,13 @@ class ArchiveExtractor:
         parent_directory = os.path.split(target_directory_path)[0]
         target_directory_name = os.path.basename(target_directory_path)
 
-        if archive_path.endswith('.tar.gz'):
+        if tarfile.is_tarfile(archive_path):
             with tarfile.open(archive_path, 'r') as tar:
                 for tarinfo in tar.getmembers():
                     path_elements = split_path(tarinfo.path)
                     path_elements[0] = target_directory_name
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
-                    tar.extract(tarinfo, destination)
+                    tar._extract_member(tarinfo, destination)
         else:
             raise ValueError("Unsupported archive type" + archive_name)
 
@@ -154,13 +152,7 @@ class Application:
 
 
 def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:  # Python >2.5
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
+    os.makedirs(path, exist_ok=True)
 
 
 def split_path(p):
