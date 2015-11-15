@@ -8,9 +8,6 @@ run python application.py
 
 # stuff to automate #
 
-## automation tool ##
-1. fix archive extraction
-
 ## Dolphin ##
 1. Same settings for all folders
 1. Show menu bar
@@ -23,7 +20,6 @@ run python application.py
 ## Desktop ##
 1. Disable Screen Edges actions
 
-
 ## Development ##
 ### Ruby ###
 1. install rbenv
@@ -33,12 +29,10 @@ run python application.py
 1. https://github.com/sstephenson/ruby-build#readme
 
 ## Software ##
-
 1. Keepass
 1. pip
 1. Audacios
 1. etckeeper
 
 ## Configuration ##
-
 https://help.github.com/articles/caching-your-github-password-in-git/
