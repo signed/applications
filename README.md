@@ -1,6 +1,10 @@
-follow the setup process in the docker file
+run ./setup_python_env.bash
+This creates a new python environment based on python 3.5 [Blog] [1] 
 
-runt python application.py
+[1]: http://thomas-cokelaer.info/blog/2014/08/installing-another-python-version-into-virtualenv/ "Blog"
+have a look into the docker file
+
+run python application.py
 
 # stuff to automate #
 
