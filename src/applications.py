@@ -5,9 +5,10 @@ import os
 import requests
 import tarfile
 import urllib.parse
+import hashlib
 from os.path import expanduser
 from os.path import join
-
+import shutil
 
 def _search_path_for(pathname_suffix):
     candidates = [os.path.join(directory, pathname_suffix) for directory in sys.path]
@@ -95,8 +96,7 @@ class ApplicationsHome:
         mkdir_p(self._parent_directory_for(application))
 
     def _ensure_archive_was_downloaded(self, application):
-        destination = self._archive_path_for(application)
-        self.downloader.download(application, destination)
+        self.downloader.download(application, self._archive_path_for(application))
 
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
@@ -134,6 +134,9 @@ class ApplicationsHome:
 
 
 class Downloader:
+    def __init__(self):
+        pass
+
     def download(self, application, destination):
         if os.path.isfile(destination):
             print('already downloaded ' + application.filename())
@@ -148,6 +151,18 @@ class Downloader:
                     storage_file.write(chunk)
                     storage_file.flush()
 
+
+class ArchivingDownloader:
+    def __init__(self, archive_directory, downloader):
+        self.archive_directory = archive_directory
+        self.downloader = downloader
+
+    def download(self, application, destination):
+        archive_key = hashlib.md5(destination.encode('utf-8')).hexdigest()
+        archive_path = os.path.join(self.archive_directory, archive_key)
+        if not os.path.isfile(archive_path):
+            self.downloader.download(application, archive_path)
+        shutil.copy(archive_path, destination)
 
 class ArchiveExtractor:
     def __init__(self):
@@ -237,7 +252,11 @@ def xmind():
 
 
 if __name__ == '__main__':
-    installationDirectory = ApplicationsHome(expanduser('~/apps/'), Downloader())
+    download_cache_directory = os.path.join(os.getcwd(), 'downloads')
+    mkdir_p(download_cache_directory)
+
+    combined_downloader = ArchivingDownloader(download_cache_directory, Downloader())
+    installationDirectory = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
     installationDirectory.ensure_exists()
 
     # installationDirectory.install(oracle_java())
