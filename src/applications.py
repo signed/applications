@@ -36,7 +36,7 @@ class ApplicationsHome:
         path = application.metadata_for('path')
         if path is not None:
             path_to_path_file = os.path.join(self.configuration_path, application.name + '.path')
-            with open(path_to_path_file, 'wb') as path_file:
+            with open(path_to_path_file, 'wt') as path_file:
                 path_file.write(path % self._template_data_for(application))
 
         env = application.metadata_for('env')
@@ -155,41 +155,49 @@ def split_path(p):
     return (split_path(a) if len(a) and len(b) else []) + [b]
 
 
-if __name__ == '__main__':
-    installationDirectory = ApplicationsHome(expanduser('~/apps/'))
-    installationDirectory.ensure_exists()
+def maven():
+    maven_mirror = 'http://artfiles.org/apache.org'
+    # maven_mirror = 'http://localhost:8080/files/apache'
+    maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
+    maven_metadata = {
+        'path': '%(installation_directory)s/bin'
+    }
+    return Application('maven', '3.3.3', maven_download_url_template, maven_metadata)
 
+
+def oracle_java():
     java_mirror = 'http://dl.dropboxusercontent.com/u/176191/boxen'
-    java_mirror = 'http://localhost:8080/files'
+    # java_mirror = 'http://localhost:8080/files'
     java_download_url_template = java_mirror = java_mirror + '/java/jdk-%(version)s-linux-x64.tar.gz'
-
     java_metadata = {
         'path': '%(installation_directory)s/bin',
         'env': {
             'JAVA_HOME': '%(installation_directory)s'
         }
     }
-    #installationDirectory.install(Application('java', '8u40', java_download_url_template, java_metadata))
+    return Application('java', '8u40', java_download_url_template, java_metadata)
 
-    maven_mirror = 'http://artfiles.org/apache.org'
-    #maven_mirror = 'http://localhost:8080/files/apache'
-    maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
 
-    maven_metadata = {
-        'path': '%(installation_directory)s/bin'
-    }
-    installationDirectory.install(Application('maven', '3.3.3', maven_download_url_template, maven_metadata))
-
+def intellij():
     idea_metadata = {
         'path': '%(installation_directory)s/bin'
     }
     jetbrains_mirror = 'http://download.jetbrains.com'
-    #jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
-
+    # jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
     idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
-    #installationDirectory.install(Application('idea', '14.0.4', idea_download_url_template))
-    installationDirectory.install(Application('idea', '14.1.5', idea_download_url_template, idea_metadata))
+    return Application('idea', '14.1.5', idea_download_url_template, idea_metadata)
 
+
+def xmind():
     xmind_mirror = 'http://www.xmind.net'
     xmind_download_url_template = xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
-    # installationDirectory.install(Application('xmind', '3.5.1', xmind_download_url_template))
+    return Application('xmind', '3.5.1', xmind_download_url_template)
+
+if __name__ == '__main__':
+    installationDirectory = ApplicationsHome(expanduser('~/apps/'))
+    installationDirectory.ensure_exists()
+
+    # installationDirectory.install(oracle_java())
+    installationDirectory.install(maven())
+    # installationDirectory.install(intellij())
+    # installationDirectory.install(xmind())
