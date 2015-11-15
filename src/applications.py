@@ -4,7 +4,7 @@ from os.path import join
 import os
 import errno
 import tarfile
-import urlparse
+import urllib.parse
 import sys
 
 import requests
@@ -13,7 +13,7 @@ import requests
 def _search_path_for(pathname_suffix):
     candidates = [os.path.join(directory, pathname_suffix) for directory in sys.path]
     try:
-        return filter(os.path.exists, candidates)[0]
+        return next(filter(os.path.exists, candidates))
     except IndexError:
         return None
 
@@ -42,8 +42,8 @@ class ApplicationsHome:
         env = application.metadata_for('env')
         if env is not None:
             path_to_env_file = os.path.join(self.configuration_path, application.name + '.env')
-            with open(path_to_env_file, 'wb') as env_file:
-                template_content = '\n'.join(map(lambda (key, value): key + '="' + value + '"', env.items()))
+            with open(path_to_env_file, 'wt') as env_file:
+                template_content = '\n'.join(map(lambda key, value: key + '="' + value + '"', env.items()))
                 env_file.write(template_content % self._template_data_for(application))
 
     def _write_rc_file(self):
@@ -63,12 +63,12 @@ class ApplicationsHome:
 
     def _ensure_archive_was_downloaded(self, application):
         if self._archive_already_downloaded(application):
-            print 'already downloaded ' + application.filename()
+            print('already downloaded ' + application.filename())
             return
 
         print(application.url())
         response = requests.get(application.url(), stream=True)
-        print response.status_code
+        print(response.status_code)
         with open(self._archive_path_for(application), "wb") as storage_file:
             for chunk in response.iter_content(chunk_size=1024):
                 if chunk:  # filter out keep-alive new chunks
@@ -77,7 +77,7 @@ class ApplicationsHome:
 
     def _extract_archive(self, application):
         if self._archive_already_extracted(application):
-            print 'already extracted ' + application.filename()
+            print('already extracted ' + application.filename())
             return
 
         archive_path = self._archive_path_for(application)
@@ -129,7 +129,7 @@ class Application:
         self.metadata = metadata if metadata else {}
 
     def filename(self):
-        parsed_url = urlparse.urlparse(self.url())
+        parsed_url = urllib.parse.urlparse(self.url())
         filename = os.path.basename(parsed_url.path)
         return filename
 
@@ -179,7 +179,6 @@ if __name__ == '__main__':
         'path': '%(installation_directory)s/bin'
     }
     installationDirectory.install(Application('maven', '3.3.3', maven_download_url_template, maven_metadata))
-
 
     idea_metadata = {
         'path': '%(installation_directory)s/bin'
