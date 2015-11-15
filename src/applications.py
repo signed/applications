@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from os.path import expanduser
-from os.path import join
+import sys
+
 import os
+import requests
 import tarfile
 import urllib.parse
-import sys
-import requests
+from os.path import expanduser
+from os.path import join
 
 
 def _search_path_for(pathname_suffix):
@@ -14,6 +15,38 @@ def _search_path_for(pathname_suffix):
         return next(filter(os.path.exists, candidates))
     except IndexError:
         return None
+
+
+class _MyHackedTarFile(tarfile.TarFile):
+    def extract_member_to(self, member, path="", set_attrs=True, *, numeric_owner=False):
+        self._check("r")
+
+        if isinstance(member, str):
+            tarinfo = self.getmember(member)
+        else:
+            tarinfo = member
+
+        # Prepare the link target for makelink().
+        if tarinfo.islnk():
+            tarinfo._link_target = os.path.join(path, tarinfo.linkname)
+
+        try:
+            self._extract_member(tarinfo, path,
+                                 set_attrs=set_attrs,
+                                 numeric_owner=numeric_owner)
+        except OSError as e:
+            if self.errorlevel > 0:
+                raise
+            else:
+                if e.filename is None:
+                    self._dbg(1, "tarfile: %s" % e.strerror)
+                else:
+                    self._dbg(1, "tarfile: %s %r" % (e.strerror, e.filename))
+        except tarfile.ExtractError as e:
+            if self.errorlevel > 1:
+                raise
+            else:
+                self._dbg(1, "tarfile: %s" % e)
 
 
 class ApplicationsHome:
@@ -122,12 +155,12 @@ class ArchiveExtractor:
         target_directory_name = os.path.basename(target_directory_path)
 
         if tarfile.is_tarfile(archive_path):
-            with tarfile.open(archive_path, 'r') as tar:
+            with _MyHackedTarFile.open(archive_path, 'r') as tar:
                 for tarinfo in tar.getmembers():
                     path_elements = split_path(tarinfo.path)
                     path_elements[0] = target_directory_name
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
-                    tar._extract_member(tarinfo, destination)
+                    tar.extract_member_to(tarinfo, destination)
         else:
             raise ValueError("Unsupported archive type" + archive_name)
 
@@ -197,6 +230,7 @@ def xmind():
     xmind_mirror = 'http://www.xmind.net'
     xmind_download_url_template = xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
     return Application('xmind', '3.5.1', xmind_download_url_template)
+
 
 if __name__ == '__main__':
     installationDirectory = ApplicationsHome(expanduser('~/apps/'))
