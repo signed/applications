@@ -14,6 +14,12 @@ run python application.py
 1. Details view
 1. Hide Information Panel
 
+
+## installer methods ##
+1. git
+1. apt
+1. zip
+
 ## Shortcuts ##
 1. Krunner windows+space
 
