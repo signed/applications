@@ -3,6 +3,7 @@
 *.pyc
 .tmp/
 .vagrant/
+out/
 *~
 downloads/
 environment/virtualenv/
