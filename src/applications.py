@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import sys
 
+import hashlib
 import os
 import requests
+import shutil
 import tarfile
 import urllib.parse
-import hashlib
+import zipfile
 from os.path import expanduser
 from os.path import join
-import shutil
+
 
 def _search_path_for(pathname_suffix):
     candidates = [os.path.join(directory, pathname_suffix) for directory in sys.path]
@@ -134,8 +136,6 @@ class ApplicationsHome:
 
 
 class Downloader:
-    def __init__(self):
-        pass
 
     def download(self, application, destination):
         if os.path.isfile(destination):
@@ -180,6 +180,9 @@ class ArchiveExtractor:
                     path_elements[0] = target_directory_name
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
                     tar.extract_member_to(tarinfo, destination)
+        elif zipfile.is_zipfile(archive_path):
+            with zipfile.ZipFile('spam.zip', 'r') as zip:
+                zip.list
         else:
             raise ValueError("Unsupported archive type" + archive_name)
 
@@ -251,6 +254,10 @@ def xmind():
     return Application('xmind', '3.5.1', xmind_download_url_template)
 
 
+def keepass():
+    url = 'http://downloads.sourceforge.net/project/keepass/KeePass 2.x/2.30/KeePass-2.30.zip'
+    return Application('keepass', '2.30', url)
+
 if __name__ == '__main__':
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
     mkdir_p(download_cache_directory)
@@ -260,6 +267,7 @@ if __name__ == '__main__':
     installationDirectory.ensure_exists()
 
     # installationDirectory.install(oracle_java())
-    installationDirectory.install(maven())
+    # installationDirectory.install(maven())
+    installationDirectory.install(keepass())
     # installationDirectory.install(intellij())
     # installationDirectory.install(xmind())
