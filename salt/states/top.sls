@@ -1,3 +1,4 @@
 base:
   '*':
+    - commenlyavailablepackages
     - keepass2

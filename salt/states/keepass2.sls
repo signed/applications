@@ -10,3 +10,6 @@ install-KeePass2:
   pkg:
     - name: keepass2
     - installed
+    - allow_updates: True
+    - require:
+      - pkgrepo: add-KeePass2-ppa
