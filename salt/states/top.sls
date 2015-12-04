@@ -1,3 +1,3 @@
 base:
   '*':
-    - webserver
+    - keepass2
