@@ -35,10 +35,10 @@ run python application.py
 1. https://github.com/sstephenson/ruby-build#readme
 
 ## Software ##
-1. Keepass
+1. [done] Keepass
 1. pip
-1. Audacios
-1. etckeeper
+1. [done] Audacios
+1. [done] etckeeper 
 
 ## Configuration ##
 https://help.github.com/articles/caching-your-github-password-in-git/
