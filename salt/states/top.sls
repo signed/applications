@@ -2,4 +2,5 @@ base:
   '*':
     - commenlyavailablepackages
     - git
-    - keepass2
+    - ppa.keepass2
+    - ppa.chrome
