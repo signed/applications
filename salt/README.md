@@ -6,19 +6,20 @@ sudo salt-call --file-root=/vagrant/states --config-dir=/vagrant  --local state.
 
 
 # next #
-docker
+## install docker ##
 https://github.com/saltstack-formulas/docker-formula
-https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html
 
 ## salt can install itself with salt ##
 https://github.com/saltstack-formulas/salt-formula
-
 
 ## salt and vagrant ##
 https://github.com/saltstack/salt/issues/17963#issuecomment-66330153 sample setup for runing salt in vagrant. I like it.
 
 ## salt best practices ##
 https://docs.saltstack.com/en/latest/topics/best_practices.html
+
+## learn how to write formulas #
+https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html
 
 #salt terms#
 ## PyObjects ##
