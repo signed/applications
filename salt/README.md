@@ -14,8 +14,11 @@ https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.htm
 https://github.com/saltstack-formulas/salt-formula
 
 
-# salt and vagrant #
+## salt and vagrant ##
 https://github.com/saltstack/salt/issues/17963#issuecomment-66330153 sample setup for runing salt in vagrant. I like it.
+
+## salt best practices ##
+https://docs.saltstack.com/en/latest/topics/best_practices.html
 
 #salt terms#
 ## PyObjects ##
