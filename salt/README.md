@@ -10,6 +10,13 @@ docker
 https://github.com/saltstack-formulas/docker-formula
 https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html
 
+## salt can install itself with salt ##
+https://github.com/saltstack-formulas/salt-formula
+
+
+# salt and vagrant #
+https://github.com/saltstack/salt/issues/17963#issuecomment-66330153 sample setup for runing salt in vagrant. I like it.
+
 #salt terms#
 ## PyObjects ##
 
