@@ -1,6 +1,7 @@
 base:
   '*':
-    - commenlyavailablepackages
-    - git
-    - ppa.keepass2
-    - ppa.chrome
+#    - commenlyavailablepackages
+#    - git
+#    - ppa.keepass2
+#    - ppa.chrome
+    - sun-java
