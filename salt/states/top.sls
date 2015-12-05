@@ -5,4 +5,5 @@ base:
 #    - ppa.keepass2
 #    - ppa.chrome
 #    - sun-java
-    - ppa.docker
+#    - ppa.docker
+    - ppa.virtualbox
