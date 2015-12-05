@@ -18,3 +18,4 @@ install dkms:
     - require:
       - pkg: virtualbox-5.0
     - name: dkms
+    - comment: ensure that the VirtualBox host kernel modules are properly updated if the linux kernel version changes
