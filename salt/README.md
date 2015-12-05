@@ -33,7 +33,11 @@ This needs to be configured in the `minion` file.
       - git
 
 
-There can be other fileserver backends configured besides `git` like `roots` what is the default.  
+There can be other fileserver backends configured besides `git` like `roots` what is the default.
+`salt-call` will clone the repositories into a subdirectory of `/var/cache/salt/minion/gitfs/` and keep track of the checkout hash at `/var/cache/salt/minion/gitfs/remote_map.txt`.
+
+  
+  
 
 ## grains ##
 As far as I understand those are basic facts gathered from the system
