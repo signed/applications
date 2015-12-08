@@ -6,4 +6,5 @@ base:
 #    - ppa.chrome
 #    - sun-java
 #    - ppa.docker
-    - ppa.virtualbox
+#    - ppa.virtualbox
+    - ppa.vagrant
