@@ -18,6 +18,10 @@ https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.htm
 ## salt can install itself with salt ##
 https://github.com/saltstack-formulas/salt-formula
 
+# open issues #
+## ensure public keys are not tempered with ##
+when adding a repository the finger print of the downloaded public key should be checked before the key is installed.
+
 #salt terms#
 ## PyObjects ##
 
@@ -43,10 +47,7 @@ This needs to be configured in the `minion` file.
 
 There can be other fileserver backends configured besides `git` like `roots` what is the default.
 `salt-call` will clone the repositories into a subdirectory of `/var/cache/salt/minion/gitfs/` and keep track of the checkout hash at `/var/cache/salt/minion/gitfs/remote_map.txt`.
-
-  
-  
-
+ 
 ## grains ##
 As far as I understand those are basic facts gathered from the system
 
