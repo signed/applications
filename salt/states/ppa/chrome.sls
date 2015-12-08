@@ -2,7 +2,7 @@ add-google-chrome-ppa:
   pkgrepo:
     - managed
     - humanname: Google Chrome
-    - name: deb https://dl.google.com/linux/chrome/deb/ stable main
+    - name: deb http://dl.google.com/linux/chrome/deb/ stable main
     - dist: stable
     - file: /etc/apt/sources.list.d/google-chrome.list
     - gpgcheck: 1
