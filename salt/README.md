@@ -1,14 +1,11 @@
 #command to run salt states inside vagrant box
 sudo apt-get install salt-minion
 sudo apt-get install  python-pygit2 #https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html
-sudo salt-call --file-root=/vagrant/states --local state.highstate
-sudo salt-call --file-root=/vagrant/states --config-dir=/vagrant  --local state.highstate -l debug
+sudo salt-call --local --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar state.highstate
+sudo salt-call --local --config-dir=/vagrant --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar state.highstate -l debug
 
 
 # next #
-## salt and vagrant ##
-https://github.com/saltstack/salt/issues/17963#issuecomment-66330153 sample setup for running salt in vagrant. I like it. Adapt for this project?
-
 ## salt best practices ##
 https://docs.saltstack.com/en/latest/topics/best_practices.html
 
