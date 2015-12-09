@@ -2,7 +2,13 @@
 sudo apt-get install salt-minion
 sudo apt-get install  python-pygit2 #https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html
 sudo salt-call --local --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar state.highstate
-sudo salt-call --local --config-dir=/vagrant --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar state.highstate -l debug
+sudo salt-call --local --config-dir=/vagrant --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar -l debug <call> 
+
+## calls ##
+* state.highstate
+* pillar.data
+* pillar.raw
+* pillar.get <key>
 
 
 # next #
