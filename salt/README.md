@@ -59,6 +59,13 @@ As far as I understand those are basic facts gathered from the system
 ## pillar ##
 A configuration mechanism?
 
+## state module ##
+The state module should only perform "before" and "after" checks [link][state module]. 
+
+[state module]: https://docs.saltstack.com/en/latest/ref/states/writing.html#full-state-module-example
+
+## execution modules ##
+
 ## debugging ##
 
 https://docs.saltstack.com/en/latest/ref/modules/all/salt.modules.test.html
