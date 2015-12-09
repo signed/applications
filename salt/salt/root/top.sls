@@ -7,4 +7,5 @@ base:
 #    - sun-java
 #    - ppa.docker
 #    - ppa.virtualbox
-    - ppa.vagrant
+#    - ppa.vagrant
+    - own
