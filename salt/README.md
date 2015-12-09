@@ -9,6 +9,8 @@ sudo salt-call --local --config-dir=/vagrant --file-root=/vagrant/salt/root --pi
 * pillar.data
 * pillar.raw
 * pillar.get <key>
+* grains.items --output=pprint
+* sys.doc
 
 
 # next #
@@ -57,3 +59,6 @@ As far as I understand those are basic facts gathered from the system
 ## pillar ##
 A configuration mechanism?
 
+## debugging ##
+
+https://docs.saltstack.com/en/latest/ref/modules/all/salt.modules.test.html
