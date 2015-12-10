@@ -59,12 +59,22 @@ As far as I understand those are basic facts gathered from the system
 ## pillar ##
 A configuration mechanism?
 
-## state module ##
+## modules ##
+There are significant differences between execution modules and state modules. Unfortunately the term module is a bit overloaded.
+
+### state module ###
+A state module tells the Salt Minion what the end result, or "state" should be.
+Examples would be "make sure apache is installed" or "make sure this specific config file exists on the filesystem".
+The important difference is that a state module will check the system to see if the machine conforms with the desired state before doing anything.
+So in the case of "make sure apache is installed" the Salt Minion will check to see if Apache is installed and do nothing if Apache is installed.
+If it's not obvious, Salt will install Apache if needed.
+
 The state module should only perform "before" and "after" checks [link][state module]. 
 
 [state module]: https://docs.saltstack.com/en/latest/ref/states/writing.html#full-state-module-example
 
-## execution modules ##
+### execution modules ###
+An execution module is a command sent to a Salt Minion to be executed immediately. Examples are "install apache" or "restart memcached".
 
 ## debugging ##
 
