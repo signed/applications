@@ -10,6 +10,9 @@ log.error('It Is Busted')
 
 def hello_world(name):
     ret = {'name': name, 'changes': {}, 'result': False, 'comment': ''}
+
+    ret['result'] = __salt__['pkg_local.environment_setup']()
+
     ret['changes'] = {
         'cat': {
             'old': 'relaxing in front of the chimney',
@@ -20,7 +23,6 @@ def hello_world(name):
             'new': 'hunting the cat',
         }
     }
-    ret['result'] = True
     ret['comment'] = 'This went really well!'
     return ret
 
