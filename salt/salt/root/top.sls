@@ -8,4 +8,5 @@ base:
 #    - ppa.docker
 #    - ppa.virtualbox
 #    - ppa.vagrant
-    - own
+#    - own
+    - tmp_file
