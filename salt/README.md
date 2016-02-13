@@ -1,8 +1,7 @@
 #command to run salt states inside vagrant box
 sudo apt-get install salt-minion
 sudo apt-get install  python-pygit2 #https://docs.saltstack.com/en/latest/topics/tutorials/gitfs.html
-sudo salt-call --local --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar state.highstate
-sudo salt-call --local --config-dir=/vagrant --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar -l debug <call> 
+sudo salt-call --local --config-dir=/vagrant/salt/configuration --file-root=/vagrant/salt/root --pillar-root=/vagrant/salt/pillar -l debug <call>
 
 ## calls ##
 * state.highstate
