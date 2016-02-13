@@ -13,6 +13,9 @@ sudo salt-call --local --config-dir=/vagrant/salt/configuration --file-root=/vag
 
 
 # next #
+## how to write salt states
+https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html
+
 ## salt best practices ##
 https://docs.saltstack.com/en/latest/topics/best_practices.html
 
