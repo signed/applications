@@ -27,11 +27,17 @@ def hello_world(name):
     return ret
 
 
+def mod_init(low):
+    log.info('initialize state module for \'' + low['fun'] + '\'')
+
+    if low['name'] in ['maven', 'java'] :
+        return False # Call mod_init the next time a function is called in this state
+    return True
+
+
 def installed(name, version, url, path=[], env={}):
     # name,result,changes,comment
     ret = {'name': name, 'changes': {}, 'result': True, 'comment': ''}
-    print(path)
-    print(env)
     return ret
 
 
