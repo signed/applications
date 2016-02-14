@@ -6,7 +6,8 @@ import os
 import requests
 import shutil
 import tarfile
-import urllib.parse
+import errno
+import urlparse
 import zipfile
 from os.path import expanduser
 from os.path import join
@@ -15,13 +16,13 @@ from os.path import join
 def _search_path_for(pathname_suffix):
     candidates = [os.path.join(directory, pathname_suffix) for directory in sys.path]
     try:
-        return next(filter(os.path.exists, candidates))
+        return filter(os.path.exists, candidates)[0]
     except IndexError:
         return None
 
 
 class _MyHackedTarFile(tarfile.TarFile):
-    def extract_member_to(self, member, path="", set_attrs=True, *, numeric_owner=False):
+    def extract_member_to(self, member, path=""):
         self._check("r")
 
         if isinstance(member, str):
@@ -34,9 +35,7 @@ class _MyHackedTarFile(tarfile.TarFile):
             tarinfo._link_target = os.path.join(path, tarinfo.linkname)
 
         try:
-            self._extract_member(tarinfo, path,
-                                 set_attrs=set_attrs,
-                                 numeric_owner=numeric_owner)
+            self._extract_member(tarinfo, path)
         except OSError as e:
             if self.errorlevel > 0:
                 raise
@@ -195,7 +194,7 @@ class Application:
         self.metadata = metadata if metadata else {}
 
     def filename(self):
-        parsed_url = urllib.parse.urlparse(self.url())
+        parsed_url = urlparse.urlparse(self.url())
         filename = os.path.basename(parsed_url.path)
         return filename
 
@@ -207,7 +206,13 @@ class Application:
 
 
 def mkdir_p(path):
-    os.makedirs(path, exist_ok=True)
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
 
 
 def split_path(p):
@@ -267,7 +272,6 @@ if __name__ == '__main__':
     installationDirectory.ensure_exists()
 
     # installationDirectory.install(oracle_java())
-    # installationDirectory.install(maven())
-    installationDirectory.install(keepass())
+    installationDirectory.install(maven())
     # installationDirectory.install(intellij())
     # installationDirectory.install(xmind())
