@@ -221,9 +221,7 @@ def split_path(p):
 
 
 def maven():
-    maven_mirror = 'http://artfiles.org/apache.org'
-    # maven_mirror = 'http://localhost:8080/files/apache'
-    maven_download_url_template = maven_mirror + '/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
+    maven_download_url_template = 'http://artfiles.org/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
     maven_metadata = {
         'path': '%(installation_directory)s/bin'
     }
@@ -231,9 +229,7 @@ def maven():
 
 
 def oracle_java():
-    java_mirror = 'http://dl.dropboxusercontent.com/u/176191/boxen'
-    # java_mirror = 'http://localhost:8080/files'
-    java_download_url_template = java_mirror = java_mirror + '/java/jdk-%(version)s-linux-x64.tar.gz'
+    java_download_url_template = 'http://dl.dropboxusercontent.com/u/176191/boxen/java/jdk-%(version)s-linux-x64.tar.gz'
     java_metadata = {
         'path': '%(installation_directory)s/bin',
         'env': {
@@ -247,15 +243,12 @@ def intellij():
     idea_metadata = {
         'path': '%(installation_directory)s/bin'
     }
-    jetbrains_mirror = 'http://download.jetbrains.com'
-    # jetbrains_mirror = 'http://localhost:8080/files/jetbrains'
-    idea_download_url_template = jetbrains_mirror + '/idea/ideaIU-%(version)s.tar.gz'
+    idea_download_url_template = 'hdttp://download.jetbrains.com/idea/ideaIU-%(version)s.tar.gz'
     return Application('idea', '15.0.1', idea_download_url_template, idea_metadata)
 
 
 def xmind():
-    xmind_mirror = 'http://www.xmind.net'
-    xmind_download_url_template = xmind_mirror + '/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
+    xmind_download_url_template = 'http://www.xmind.net/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
     return Application('xmind', '3.5.1', xmind_download_url_template)
 
 
