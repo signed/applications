@@ -27,6 +27,14 @@ def hello_world(name):
     return ret
 
 
+def installed(name, version, url, path=[], env={}):
+    # name,result,changes,comment
+    ret = {'name': name, 'changes': {}, 'result': True, 'comment': ''}
+    print(path)
+    print(env)
+    return ret
+
+
 def enforce_custom_thing(name, foo, bar=True):
     """
     Enforce the state of a custom thing
@@ -48,7 +56,7 @@ def enforce_custom_thing(name, foo, bar=True):
     # and agree with each-other?
     if bar == True and foo.startswith('Foo'):
         raise salt.exceptions.SaltInvocationError(
-            'Argument "foo" cannot start with "Foo" if argument "bar" is True.')
+                'Argument "foo" cannot start with "Foo" if argument "bar" is True.')
 
     # Check the current state of the system. Does anything need to change?
     current_state = __salt__['my_custom_module.current_state'](name)
