@@ -221,14 +221,18 @@ def split_path(p):
 
 
 def maven():
+    name = 'maven'
+    version = '3.3.3'
     url = 'http://artfiles.org/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
     metadata = {
         'path': '%(installation_directory)s/bin'
     }
-    return Application('maven', '3.3.3', url, metadata)
+    return Application(name, version, url, metadata)
 
 
 def oracle_java():
+    name = 'java'
+    version = '8u40'
     url = 'http://dl.dropboxusercontent.com/u/176191/boxen/java/jdk-%(version)s-linux-x64.tar.gz'
     metadata = {
         'path': '%(installation_directory)s/bin',
@@ -236,25 +240,25 @@ def oracle_java():
             'JAVA_HOME': '%(installation_directory)s'
         }
     }
-    return Application('java', '8u40', url, metadata)
+    return Application(name, version, url, metadata)
 
 
 def intellij():
-    url = 'hdttp://download.jetbrains.com/idea/ideaIU-%(version)s.tar.gz'
+    name = 'idea'
+    version = '15.0.1'
+    url = 'http://download.jetbrains.com/idea/ideaIU-%(version)s.tar.gz'
     metadata = {
         'path': '%(installation_directory)s/bin'
     }
-    return Application('idea', '15.0.1', url, metadata)
+    return Application(name, version, url, metadata)
 
 
 def xmind():
+    name = 'xmind'
+    version = '3.5.1'
     url = 'http://www.xmind.net/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
-    return Application('xmind', '3.5.1', url)
+    return Application(name, version, url)
 
-
-def keepass():
-    url = 'http://downloads.sourceforge.net/project/keepass/KeePass 2.x/2.30/KeePass-2.30.zip'
-    return Application('keepass', '2.30', url)
 
 if __name__ == '__main__':
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
