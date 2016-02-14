@@ -57,7 +57,7 @@ class ApplicationsHome:
         self.configuration_path = os.path.join(self.path, "etc")
         self.downloader = downloader
 
-    def ensure_exists(self):
+    def ensure_environment_is_setup(self):
         mkdir_p(self.path)
         mkdir_p(self.configuration_path)
         self._write_rc_file()
@@ -135,7 +135,6 @@ class ApplicationsHome:
 
 
 class Downloader:
-
     def download(self, application, destination):
         if os.path.isfile(destination):
             print('already downloaded ' + application.filename())
@@ -162,6 +161,7 @@ class ArchivingDownloader:
         if not os.path.isfile(archive_path):
             self.downloader.download(application, archive_path)
         shutil.copy(archive_path, destination)
+
 
 class ArchiveExtractor:
     def __init__(self):
@@ -265,10 +265,10 @@ if __name__ == '__main__':
     mkdir_p(download_cache_directory)
 
     combined_downloader = ArchivingDownloader(download_cache_directory, Downloader())
-    installationDirectory = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
-    installationDirectory.ensure_exists()
+    applications = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
+    applications.ensure_environment_is_setup()
 
-    # installationDirectory.install(oracle_java())
-    installationDirectory.install(maven())
-    # installationDirectory.install(intellij())
-    # installationDirectory.install(xmind())
+    applications.install(oracle_java())
+    applications.install(maven())
+    applications.install(intellij())
+    applications.install(xmind())
