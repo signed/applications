@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import errno
-import hashlib
-import shutil
 import sys
 import tarfile
 import urlparse
 import zipfile
 
+import applications.downloader
 import os
-import requests
 from os.path import expanduser
 from os.path import join
 
@@ -142,38 +140,6 @@ class ApplicationsHome:
         os.symlink(extract_directory + '/', current_sym_link)
 
 
-class Downloader:
-    def __init__(self):
-        pass
-
-    def download(self, application, destination):
-        if os.path.isfile(destination):
-            print('already downloaded ' + application.filename())
-            return
-
-        print(application.url())
-        response = requests.get(application.url(), stream=True)
-        print(response.status_code)
-        with open(destination, "wb") as storage_file:
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    storage_file.write(chunk)
-                    storage_file.flush()
-
-
-class ArchivingDownloader:
-    def __init__(self, archive_directory, downloader):
-        self.archive_directory = archive_directory
-        self.downloader = downloader
-
-    def download(self, application, destination):
-        archive_key = hashlib.md5(destination.encode('utf-8')).hexdigest()
-        archive_path = os.path.join(self.archive_directory, archive_key)
-        if not os.path.isfile(archive_path):
-            self.downloader.download(application, archive_path)
-        shutil.copy(archive_path, destination)
-
-
 class ArchiveExtractor:
     def __init__(self):
         pass
@@ -275,11 +241,11 @@ if __name__ == '__main__':
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
     mkdir_p(download_cache_directory)
 
-    combined_downloader = ArchivingDownloader(download_cache_directory, Downloader())
-    applications = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
-    applications.ensure_environment_is_setup()
+    combined_downloader = applications.downloader.ArchivingDownloader(download_cache_directory, applications.downloader.Downloader())
+    entry = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
+    entry.ensure_environment_is_setup()
 
-    applications.install(oracle_java())
+    entry.install(oracle_java())
     # applications.install(maven())
     # applications.install(intellij())
     # applications.install(xmind())

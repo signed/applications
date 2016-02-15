@@ -1,6 +1,6 @@
-from hamcrest import *
-from unittest import TestCase
 import unittest
+from unittest import TestCase
+
 
 class ApplicationsHomeTest(TestCase):
 

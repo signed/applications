@@ -1,7 +1,8 @@
-from hamcrest import *
-from unittest import TestCase
 import unittest
-from applications import Application
+from unittest import TestCase
+
+from hamcrest import *
+from installer import Application
 
 
 class ApplicationsHomeTest(TestCase):
