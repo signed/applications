@@ -4,3 +4,4 @@ PyYAML
 MarkupSafe
 requests >= 1.0.0
 PyHamcrest >=1.8.2
+ndg-httpsclient >= 0.4.0
