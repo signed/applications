@@ -87,6 +87,17 @@ class WritePathAdditionFile(InstallationStep):
                 path_file.write(path % template_data)
 
 
+class PointCurrentSymLinkToApplication(InstallationStep):
+    def install(self, directory_structure, application, template_data):
+        current_sym_link = directory_structure.current_symlink_path_for(application)
+
+        if os.path.islink(current_sym_link):
+            os.unlink(current_sym_link)
+
+        extract_directory = directory_structure.directory_for(application)
+        os.symlink(extract_directory + '/', current_sym_link)
+
+
 class ApplicationInstaller:
     def __init__(self, path, downloader):
         self.directory_structure = DirectoryStructure(expanduser(path))
@@ -97,13 +108,11 @@ class ApplicationInstaller:
         self._write_rc_file()
 
     def install(self, application):
+        template_data = self._template_data_for(application)
         self.directory_structure.ensure_installation_directory_exists(application)
         self._ensure_archive_was_downloaded(application)
         self._extract_archive(application)
-        self._ensure_current_symlink_is_up_to_date(application)
-
-        template_data = self._template_data_for(application)
-
+        PointCurrentSymLinkToApplication().install(self.directory_structure, application, template_data)
         WritePathAdditionFile().install(self.directory_structure, application, template_data)
         WriteEnvironmentVariableFile().install(self.directory_structure, application, template_data)
 
@@ -131,15 +140,6 @@ class ApplicationInstaller:
         target_directory_path = self.directory_structure.directory_for(application)
 
         applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path)
-
-    def _ensure_current_symlink_is_up_to_date(self, application):
-        current_sym_link = self.directory_structure.current_symlink_path_for(application)
-
-        if os.path.islink(current_sym_link):
-            os.unlink(current_sym_link)
-
-        extract_directory = self.directory_structure.directory_for(application)
-        os.symlink(extract_directory + '/', current_sym_link)
 
 
 class DirectoryStructure:
