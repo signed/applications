@@ -1,11 +1,11 @@
 import errno
 import sys
 import urlparse
-from abc import abstractmethod, ABCMeta
 
 import applications.downloader
 import applications.extractor
 import os
+from abc import abstractmethod, ABCMeta
 from os.path import expanduser
 from os.path import join
 
@@ -57,7 +57,7 @@ class Application:
 
 
 class InstallationStep(object):
-    __metaclass__= ABCMeta
+    __metaclass__ = ABCMeta
 
     def __init__(self):
         pass
@@ -67,17 +67,25 @@ class InstallationStep(object):
 
 
 class WriteEnvironmentVariableFile(InstallationStep):
-    def __init__(self):
-        super(WriteEnvironmentVariableFile, self).__init__()
 
     def install(self, directory_structure, application, template_data):
         env = application.metadata_for('env')
         if env is not None:
             path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
             with open(path_to_env_file, 'wt') as env_file:
-                content_with_template_variables = '\n'.join(
-                    map(lambda key, value: key + '="' + value + '"', env.items()))
+                content_with_template_variables = '\n'.join(map(lambda key, value: key + '="' + value + '"', env.items()))
                 env_file.write(content_with_template_variables % template_data)
+
+
+class WritePathAdditionFile(InstallationStep):
+
+    def install(self, directory_structure, application, template_data):
+        path = application.metadata_for('path')
+        if path is not None:
+            path_to_path_file = os.path.join(directory_structure.configuration_path, application.name + '.path')
+            with open(path_to_path_file, 'wt') as path_file:
+                path_file.write(path % template_data)
+
 
 
 class ApplicationInstaller:
@@ -96,12 +104,8 @@ class ApplicationInstaller:
         self._ensure_current_symlink_is_up_to_date(application)
 
         template_data = self._template_data_for(application)
-        path = application.metadata_for('path')
-        if path is not None:
-            path_to_path_file = os.path.join(self.directory_structure.configuration_path, application.name + '.path')
-            with open(path_to_path_file, 'wt') as path_file:
-                path_file.write(path % template_data)
 
+        WritePathAdditionFile().install(self.directory_structure, application, template_data)
         WriteEnvironmentVariableFile().install(self.directory_structure, application, template_data)
 
     def _write_rc_file(self):
