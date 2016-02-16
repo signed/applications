@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import errno
 import sys
-import tarfile
 import urlparse
-import zipfile
 
 import applications.downloader
+import applications.extractor
 import os
 from os.path import expanduser
 from os.path import join
@@ -17,36 +16,6 @@ def _search_path_for(pathname_suffix):
         return filter(os.path.exists, candidates)[0]
     except IndexError:
         return None
-
-
-class _MyHackedTarFile(tarfile.TarFile):
-    def extract_member_to(self, member, path=""):
-        self._check("r")
-
-        if isinstance(member, str):
-            tarinfo = self.getmember(member)
-        else:
-            tarinfo = member
-
-        # Prepare the link target for makelink().
-        if tarinfo.islnk():
-            tarinfo._link_target = os.path.join(path, tarinfo.linkname)
-
-        try:
-            self._extract_member(tarinfo, path)
-        except OSError as e:
-            if self.errorlevel > 0:
-                raise
-            else:
-                if e.filename is None:
-                    self._dbg(1, "tarfile: %s" % e.strerror)
-                else:
-                    self._dbg(1, "tarfile: %s %r" % (e.strerror, e.filename))
-        except tarfile.ExtractError as e:
-            if self.errorlevel > 1:
-                raise
-            else:
-                self._dbg(1, "tarfile: %s" % e)
 
 
 class DirectoryStructure:
@@ -128,7 +97,7 @@ class ApplicationsHome:
         archive_path = self.directory_structure.archive_path_for(application)
         target_directory_path = self.directory_structure.directory_for(application)
 
-        ArchiveExtractor().extract(archive_path, target_directory_path)
+        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path)
 
     def _ensure_current_symlink_is_up_to_date(self, application):
         current_sym_link = self.directory_structure.current_symlink_path_for(application)
@@ -138,29 +107,6 @@ class ApplicationsHome:
 
         extract_directory = self.directory_structure.directory_for(application)
         os.symlink(extract_directory + '/', current_sym_link)
-
-
-class ArchiveExtractor:
-    def __init__(self):
-        pass
-
-    def extract(self, archive_path, target_directory_path):
-        archive_name = os.path.basename(archive_path)
-        parent_directory = os.path.split(target_directory_path)[0]
-        target_directory_name = os.path.basename(target_directory_path)
-
-        if tarfile.is_tarfile(archive_path):
-            with _MyHackedTarFile.open(archive_path, 'r') as tar:
-                for tarinfo in tar.getmembers():
-                    path_elements = split_path(tarinfo.path)
-                    path_elements[0] = target_directory_name
-                    destination = os.path.join(parent_directory, os.path.join(*path_elements))
-                    tar.extract_member_to(tarinfo, destination)
-        elif zipfile.is_zipfile(archive_path):
-            with zipfile.ZipFile('spam.zip', 'r') as zip:
-                zip.list
-        else:
-            raise ValueError("Unsupported archive type" + archive_name)
 
 
 class Application:
@@ -190,11 +136,6 @@ def mkdir_p(path):
             pass
         else:
             raise
-
-
-def split_path(p):
-    a, b = os.path.split(p)
-    return (split_path(a) if len(a) and len(b) else []) + [b]
 
 
 def maven():
