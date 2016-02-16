@@ -1,3 +1,6 @@
+[mocking in python](http://www.toptal.com/python/an-introduction-to-mocking-in-python)
+
+
 run ./setup_python_env.bash
 This creates a new python environment based on python 3.5 [Blog] [1] 
 

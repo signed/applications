@@ -9,8 +9,19 @@ from mymodule import rm
 
 class RmTestCase(unittest.TestCase):
 
+    @mock.patch('mymodule.os.path')
     @mock.patch('mymodule.os')
-    def test_rm(self, mock_os):
+    def test_rm(self, mock_os, mock_path):
+        mock_path.isfile.return_value = False
+
         rm("any path")
-        # test that rm called os.remove with the right parameters
+
+        # test that the remove call was NOT called.
+        self.assertFalse(mock_os.remove.called, "Failed to not remove the file if not present.")
+
+        # make the file 'exist'
+        mock_path.isfile.return_value = True
+
+        rm("any path")
+
         mock_os.remove.assert_called_with("any path")
