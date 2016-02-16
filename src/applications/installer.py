@@ -87,7 +87,6 @@ class WritePathAdditionFile(InstallationStep):
                 path_file.write(path % template_data)
 
 
-
 class ApplicationInstaller:
     def __init__(self, path, downloader):
         self.directory_structure = DirectoryStructure(expanduser(path))
