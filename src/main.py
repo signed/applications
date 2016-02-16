@@ -46,7 +46,7 @@ class DirectoryStructure:
         return os.path.join(self.path, application.name)
 
 
-class ApplicationsHome:
+class ApplicationInstaller:
     def __init__(self, path, downloader):
         self.directory_structure = DirectoryStructure(expanduser(path))
         self.downloader = downloader
@@ -183,10 +183,10 @@ if __name__ == '__main__':
     mkdir_p(download_cache_directory)
 
     combined_downloader = applications.downloader.ArchivingDownloader(download_cache_directory, applications.downloader.Downloader())
-    entry = ApplicationsHome(expanduser('~/apps/'), combined_downloader)
-    entry.ensure_environment_is_setup()
+    applicationInstaller = ApplicationInstaller(expanduser('~/apps/'), combined_downloader)
+    applicationInstaller.ensure_environment_is_setup()
 
-    entry.install(oracle_java())
+    applicationInstaller.install(oracle_java())
     # applications.install(maven())
     # applications.install(intellij())
     # applications.install(xmind())

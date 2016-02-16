@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 from hamcrest import *
-from installer import Application
+from main import Application
 
 
 class ApplicationsHomeTest(TestCase):
