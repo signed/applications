@@ -1,8 +1,8 @@
-from unittest import TestCase
 import unittest
+from unittest import TestCase
 
 
-class ApplicationsHomeTest(TestCase):
+class ApplicationInstallerTest(TestCase):
 
     def test_upper(self):
         self.assertEqual('foo'.upper(), 'FOO')

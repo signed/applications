@@ -5,7 +5,7 @@ from hamcrest import *
 from main import Application
 
 
-class ApplicationsHomeTest(TestCase):
+class ApplicationTest(TestCase):
     application = Application("do_not_care", '1.2.3', 'http://example.org/artifact-%(version)s')
 
     def test_replace_version_in_url(self):
