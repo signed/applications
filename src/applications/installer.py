@@ -1,6 +1,7 @@
 import errno
 import sys
 import urlparse
+from abc import abstractmethod, ABCMeta
 
 import applications.downloader
 import applications.extractor
@@ -13,7 +14,8 @@ def create():
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
     mkdir_p(download_cache_directory)
 
-    combined_downloader = applications.downloader.ArchivingDownloader(download_cache_directory, applications.downloader.Downloader())
+    combined_downloader = applications.downloader.ArchivingDownloader(download_cache_directory,
+                                                                      applications.downloader.Downloader())
     return ApplicationInstaller(expanduser('~/apps/'), combined_downloader)
 
 
@@ -54,6 +56,30 @@ class Application:
         return self.metadata.get(key)
 
 
+class InstallationStep(object):
+    __metaclass__= ABCMeta
+
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def install(self, directory_structure, application, template_data): pass
+
+
+class WriteEnvironmentVariableFile(InstallationStep):
+    def __init__(self):
+        super(WriteEnvironmentVariableFile, self).__init__()
+
+    def install(self, directory_structure, application, template_data):
+        env = application.metadata_for('env')
+        if env is not None:
+            path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
+            with open(path_to_env_file, 'wt') as env_file:
+                content_with_template_variables = '\n'.join(
+                    map(lambda key, value: key + '="' + value + '"', env.items()))
+                env_file.write(content_with_template_variables % template_data)
+
+
 class ApplicationInstaller:
     def __init__(self, path, downloader):
         self.directory_structure = DirectoryStructure(expanduser(path))
@@ -69,18 +95,14 @@ class ApplicationInstaller:
         self._extract_archive(application)
         self._ensure_current_symlink_is_up_to_date(application)
 
+        template_data = self._template_data_for(application)
         path = application.metadata_for('path')
         if path is not None:
             path_to_path_file = os.path.join(self.directory_structure.configuration_path, application.name + '.path')
             with open(path_to_path_file, 'wt') as path_file:
-                path_file.write(path % self._template_data_for(application))
+                path_file.write(path % template_data)
 
-        env = application.metadata_for('env')
-        if env is not None:
-            path_to_env_file = os.path.join(self.directory_structure.configuration_path, application.name + '.env')
-            with open(path_to_env_file, 'wt') as env_file:
-                template_content = '\n'.join(map(lambda key, value: key + '="' + value + '"', env.items()))
-                env_file.write(template_content % self._template_data_for(application))
+        WriteEnvironmentVariableFile().install(self.directory_structure, application, template_data)
 
     def _write_rc_file(self):
         path_to_rc_script = _search_path_for('shell/application.sh')
@@ -143,4 +165,3 @@ class DirectoryStructure:
 
     def _parent_directory_for(self, application):
         return os.path.join(self.path, application.name)
-
