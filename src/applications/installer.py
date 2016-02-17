@@ -66,19 +66,28 @@ class InstallationStep(object):
     def install(self, directory_structure, application, template_data): pass
 
 
-class WriteEnvironmentVariableFile(InstallationStep):
+class FileWriter:
+    def __init__(self):
+        pass
 
+    # noinspection PyMethodMayBeStatic
+    def write_to(self, path, mode, content):
+        with open(path, mode) as output_file:
+            output_file.write(content)
+
+
+class WriteEnvironmentVariableFile(InstallationStep):
     def install(self, directory_structure, application, template_data):
         env = application.metadata_for('env')
-        if env is not None:
-            path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
-            with open(path_to_env_file, 'wt') as env_file:
-                content_with_template_variables = '\n'.join(map(lambda key, value: key + '="' + value + '"', env.items()))
-                env_file.write(content_with_template_variables % template_data)
+        if env is None:
+            return
+        path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
+        content_with_template_variables = '\n'.join( map(lambda key, value: key + '="' + value + '"', env.items()))
+        content = content_with_template_variables % template_data
+        FileWriter().write_to(path_to_env_file, 'wt', content)
 
 
 class WritePathAdditionFile(InstallationStep):
-
     def install(self, directory_structure, application, template_data):
         path = application.metadata_for('path')
         if path is not None:
