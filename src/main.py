@@ -7,8 +7,8 @@ from applications.installer import Application
 
 def maven():
     name = 'maven'
-    version = '3.3.3'
-    url = 'http://artfiles.org/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
+    version = '3.3.9'
+    url = 'https://mirror.netcologne.de/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
     metadata = {
         'path': '%(installation_directory)s/bin'
     }
@@ -50,6 +50,6 @@ if __name__ == '__main__':
     applicationInstaller.ensure_environment_is_setup()
 
     # applicationInstaller.install(oracle_java())
-    # applicationInstaller.install(maven())
+    applicationInstaller.install(maven())
     # applicationInstaller.install(intellij())
-    applicationInstaller.install(xmind())
+    # applicationInstaller.install(xmind())
