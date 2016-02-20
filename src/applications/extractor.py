@@ -22,10 +22,12 @@ class ArchiveExtractor:
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
                     tar.extract_member_to(tarinfo, destination)
         elif zipfile.is_zipfile(archive_path):
-            with zipfile.ZipFile('spam.zip', 'r') as zip:
-                zip.list
+            with zipfile.ZipFile(archive_path, 'r') as zip:
+                for name in zip.namelist():
+                    destination = os.path.join(target_directory_path, name)
+                    zip.extract(name, destination)
         else:
-            raise ValueError("Unsupported archive type" + archive_name)
+            raise ValueError("Unsupported archive type " + archive_name)
 
 
 class _MyHackedTarFile(tarfile.TarFile):
@@ -61,5 +63,3 @@ class _MyHackedTarFile(tarfile.TarFile):
 def split_path(p):
     a, b = os.path.split(p)
     return (split_path(a) if len(a) and len(b) else []) + [b]
-
-
