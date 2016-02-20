@@ -9,23 +9,32 @@ def maven():
     name = 'maven'
     version = '3.3.9'
     url = 'https://mirror.netcologne.de/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz'
-    metadata = {
+
+    archive = {
+        'url': 'https://mirror.netcologne.de/apache.org/maven/maven-3/%(version)s/binaries/apache-maven-%(version)s-bin.tar.gz',
+        'checksum': {
+            'md5': '516923b3955b6035ba6b0a5b031fbd8b'
+        },
+        'drop_toplevel_directories': 1
+    }
+
+    configuration = {
         'path': '%(installation_directory)s/bin'
     }
-    return Application(name, version, url, metadata)
+    return Application(name, version, url, configuration)
 
 
 def oracle_java():
     name = 'java'
     version = '8u40'
     url = 'http://dl.dropboxusercontent.com/u/176191/boxen/java/jdk-%(version)s-linux-x64.tar.gz'
-    metadata = {
+    configuration = {
         'path': '%(installation_directory)s/bin',
         'env': {
             'JAVA_HOME': '%(installation_directory)s'
         }
     }
-    return Application(name, version, url, metadata)
+    return Application(name, version, url, configuration)
 
 
 def intellij():
@@ -42,7 +51,8 @@ def xmind():
     name = 'xmind'
     version = '3.5.1'
     url = 'http://www.xmind.net/xmind/downloads/xmind-portable-3.5.1.201411201906.zip'
-    return Application(name, version, url)
+    configuration = {}
+    return Application(name, version, url, configuration)
 
 
 if __name__ == '__main__':
