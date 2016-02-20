@@ -84,7 +84,7 @@ class WriteEnvironmentVariableFile(InstallationStep):
         path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
 
         lines = []
-        for key, value in env.items :
+        for key, value in env.items() :
             lines.append(key + '="' + value + '"')
 
         content_with_template_variables = '\n'.join(lines)
