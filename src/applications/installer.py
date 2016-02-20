@@ -82,7 +82,13 @@ class WriteEnvironmentVariableFile(InstallationStep):
         if env is None:
             return
         path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
-        content_with_template_variables = '\n'.join( map(lambda key, value: key + '="' + value + '"', env.items()))
+
+        lines = []
+        for key, value in env.items :
+            lines.append(key + '="' + value + '"')
+
+        content_with_template_variables = '\n'.join(lines)
+        print(content_with_template_variables)
         content = content_with_template_variables % template_data
         FileWriter().write_to(path_to_env_file, 'wt', content)
 
