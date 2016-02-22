@@ -1,11 +1,11 @@
 import errno
 import sys
 import urlparse
+from abc import abstractmethod, ABCMeta
 
 import applications.downloader
 import applications.extractor
 import os
-from abc import abstractmethod, ABCMeta
 from os.path import expanduser
 from os.path import join
 
@@ -88,7 +88,6 @@ class WriteEnvironmentVariableFile(InstallationStep):
             lines.append(key + '="' + value + '"')
 
         content_with_template_variables = '\n'.join(lines)
-        print(content_with_template_variables)
         content = content_with_template_variables % template_data
         FileWriter().write_to(path_to_env_file, 'wt', content)
 
