@@ -22,10 +22,10 @@ class ArchiveExtractor:
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
                     tar.extract_member_to(tarinfo, destination)
         elif zipfile.is_zipfile(archive_path):
-            with zipfile.ZipFile(archive_path, 'r') as zip:
-                for name in zip.namelist():
+            with zipfile.ZipFile(archive_path, 'r') as zip_file:
+                for name in zip_file.namelist():
                     destination = os.path.join(target_directory_path, name)
-                    zip.extract(name, destination)
+                    zip_file.extract(name, destination)
         else:
             raise ValueError("Unsupported archive type " + archive_name)
 
