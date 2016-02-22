@@ -3,6 +3,7 @@ import tarfile
 import zipfile
 
 import os
+from pathlib2 import PurePath
 
 
 class ArchiveExtractor:
@@ -17,7 +18,7 @@ class ArchiveExtractor:
         if tarfile.is_tarfile(archive_path):
             with _MyHackedTarFile.open(archive_path, 'r') as tar:
                 for tarinfo in tar.getmembers():
-                    path_elements = split_path(tarinfo.path)
+                    path_elements = PurePath(tarinfo.path).parts
                     path_elements[0] = target_directory_name
                     destination = os.path.join(parent_directory, os.path.join(*path_elements))
                     tar.extract_member_to(tarinfo, destination)
@@ -28,6 +29,11 @@ class ArchiveExtractor:
                     zip_file.extract(name, destination)
         else:
             raise ValueError("Unsupported archive type " + archive_name)
+
+    def _archive_path_to_extract_path(self, archive_path, number_of_parents_to_drop):
+        path_elements = PurePath(archive_path).parts[number_of_parents_to_drop:]
+
+        return os.path.join(os.path.join(*path_elements))
 
 
 class _MyHackedTarFile(tarfile.TarFile):
@@ -58,8 +64,3 @@ class _MyHackedTarFile(tarfile.TarFile):
                 raise
             else:
                 self._dbg(1, "tarfile: %s" % e)
-
-
-def split_path(p):
-    a, b = os.path.split(p)
-    return (split_path(a) if len(a) and len(b) else []) + [b]
