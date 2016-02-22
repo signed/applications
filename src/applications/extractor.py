@@ -11,28 +11,24 @@ class ArchiveExtractor:
         pass
 
     def extract(self, archive_path, target_directory_path):
-        archive_name = os.path.basename(archive_path)
-        parent_directory = os.path.split(target_directory_path)[0]
-        target_directory_name = os.path.basename(target_directory_path)
-
         if tarfile.is_tarfile(archive_path):
             with _MyHackedTarFile.open(archive_path, 'r') as tar:
                 for tarinfo in tar.getmembers():
-                    path_elements = PurePath(tarinfo.path).parts
-                    path_elements[0] = target_directory_name
-                    destination = os.path.join(parent_directory, os.path.join(*path_elements))
+                    destination = os.path.join(target_directory_path, self._archive_path_to_extract_path(tarinfo.path, 1))
                     tar.extract_member_to(tarinfo, destination)
         elif zipfile.is_zipfile(archive_path):
             with zipfile.ZipFile(archive_path, 'r') as zip_file:
-                for name in zip_file.namelist():
-                    destination = os.path.join(target_directory_path, name)
-                    zip_file.extract(name, destination)
+                for archive_path in zip_file.namelist():
+                    destination = os.path.join(target_directory_path, self._archive_path_to_extract_path(archive_path, 0))
+                    zip_file.extract(archive_path, destination)
         else:
+            archive_name = os.path.basename(archive_path)
             raise ValueError("Unsupported archive type " + archive_name)
 
     def _archive_path_to_extract_path(self, archive_path, number_of_parents_to_drop):
         path_elements = PurePath(archive_path).parts[number_of_parents_to_drop:]
-
+        if not path_elements:
+            return ''
         return os.path.join(os.path.join(*path_elements))
 
 

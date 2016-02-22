@@ -59,7 +59,7 @@ if __name__ == '__main__':
     applicationInstaller = applications.installer.create()
     applicationInstaller.ensure_environment_is_setup()
 
-    # applicationInstaller.install(oracle_java())
+    applicationInstaller.install(oracle_java())
     applicationInstaller.install(maven())
     # applicationInstaller.install(intellij())
-    # applicationInstaller.install(xmind())
+    applicationInstaller.install(xmind())
