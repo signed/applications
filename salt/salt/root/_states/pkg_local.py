@@ -35,7 +35,7 @@ def mod_init(low):
     return True
 
 
-def installed(name, version, url, path=[], env={}):
+def installed(name, version, archive={}, etc={}):
     # name,result,changes,comment
     ret = {'name': name, 'changes': {}, 'result': True, 'comment': ''}
     return ret
