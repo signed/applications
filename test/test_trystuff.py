@@ -15,6 +15,15 @@ class ApplicationsHomeTest(TestCase):
         for k, v in dictionary.iteritems():
             print k, v
 
+    def test_mutable_default_parameter(self):
+        self._method(True)
+        self._method(False)
+
+    def _method(self, write, hmm={}):
+        if write:
+            hmm['key'] = 'value'
+        print hmm
+
 
 if __name__ == '__main__':
     unittest.main()
