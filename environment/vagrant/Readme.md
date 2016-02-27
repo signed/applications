@@ -1,8 +1,10 @@
 sudo useradd fump -m -s /bin/bash
 sudo passwd fump
+sudo usermod -a -G sudo fump
 
 
 http://exponential.io/blog/2015/02/10/install-virtualenv-and-virtualenvwrapper-on-ubuntu/
+http://stackoverflow.com/questions/34474606/setting-up-saltstack-for-local-masterless-development
 
 sudo apt-get install libffi-dev
 
