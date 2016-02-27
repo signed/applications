@@ -1,11 +1,11 @@
 import errno
 import sys
 import urlparse
-from abc import abstractmethod, ABCMeta
 
 import applications.downloader
 import applications.extractor
 import os
+from abc import abstractmethod, ABCMeta
 from os.path import expanduser
 from os.path import join
 
@@ -37,11 +37,34 @@ def mkdir_p(path):
             raise
 
 
+class EnvironmentConfiguration:
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
+
+    def path_element(self):
+        return self.dictionary['path']
+
+    def environment_variables(self):
+        return self.dictionary['env']
+
+
+class ArchiveConfiguration:
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
+
+    def url(self):
+        return self.dictionary['url']
+
+    def nesting_level(self):
+        return self.dictionary['nesting_level']
+
+
 class Application:
-    def __init__(self, name, version, url_template, metadata=None):
+    def __init__(self, name, version, archive_configuration, environment_configuration, metadata=None):
         self.name = name
         self.version = version
-        self.url_template = url_template
+        self.environment_configuration = environment_configuration
+        self.archive_configuration = archive_configuration
         self.metadata = metadata if metadata else {}
 
     def filename(self):
@@ -50,7 +73,7 @@ class Application:
         return filename
 
     def url(self):
-        return self.url_template % {'version': self.version}
+        return self.archive_configuration.url() % {'version': self.version}
 
     def metadata_for(self, key):
         return self.metadata.get(key)
