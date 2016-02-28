@@ -56,7 +56,7 @@ class ArchiveConfiguration:
         return self.dictionary['url']
 
     def nesting_level(self):
-        return self.dictionary['nesting_level']
+        return self.dictionary.get('nesting_level', 0)
 
 
 class Application:
