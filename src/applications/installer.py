@@ -72,6 +72,9 @@ class Application:
         filename = os.path.basename(parsed_url.path)
         return filename
 
+    def archive(self):
+        return self.archive_configuration
+
     def url(self):
         return self.archive_configuration.url() % {'version': self.version}
 
@@ -175,8 +178,7 @@ class ApplicationInstaller:
 
         archive_path = self.directory_structure.archive_path_for(application)
         target_directory_path = self.directory_structure.directory_for(application)
-
-        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path)
+        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path, application.archive().nesting_level())
 
 
 class DirectoryStructure:

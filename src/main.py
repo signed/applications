@@ -65,9 +65,11 @@ def xmind():
 
     archive = {
         'url': 'http://www.xmind.net/xmind/downloads/xmind-portable-3.5.1.201411201906.zip',
-        'nesting_level': 1
+        'nesting_level': 0
     }
-    etc = {}
+    etc = {
+        'path': '%(installation_directory)s/XMind_Linux_64bit'
+    }
     return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc), etc)
 
 
@@ -76,6 +78,6 @@ if __name__ == '__main__':
     applicationInstaller.ensure_environment_is_setup()
 
     # applicationInstaller.install(oracle_java())
-    applicationInstaller.install(maven())
+    # applicationInstaller.install(maven())
     # applicationInstaller.install(intellij())
     applicationInstaller.install(xmind())
