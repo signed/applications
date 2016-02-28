@@ -4,8 +4,11 @@ from unittest import TestCase
 from applications.installer import DirectoryStructure
 from applications.installer import FileWriter
 from applications.installer import WriteEnvironmentVariableFile
+from applications.installer import ArchiveConfiguration
+from applications.installer import EnvironmentConfiguration
 from main import Application
 from mock import mock
+from hamcrest import *
 
 
 class WriteEnvironmentVariableFileTest(TestCase):
@@ -18,9 +21,10 @@ class WriteEnvironmentVariableFileTest(TestCase):
 
     @mock.patch.object(FileWriter, 'write_to')
     def test_do_nothing_if_there_are_no_environment_variables_set(self, mock_write_to):
-        self.template_data ={'no_env': "some value"}
+        self.template_data = {'no_env': "some value"}
         self.execute_step()
         self.assertFalse(mock_write_to.called, "Do not try to write the env file if there are no env variables")
+        assert_that(not mock_write_to.called, 'Do not try to write the env file if there are no env variables')
 
     @mock.patch.object(FileWriter, 'write_to')
     def test_write_existing_environment_variables_into_the_env_file(self, mock_write_to):
@@ -34,7 +38,10 @@ class WriteEnvironmentVariableFileTest(TestCase):
         WriteEnvironmentVariableFile().install(self.structure, self._application(), self.template_data)
 
     def _application(self):
-        return Application(self.name, self.version, self.url, self.metadata)
+        archive = {'url': self.url}
+
+        return Application(self.name, self.version, ArchiveConfiguration(archive), EnvironmentConfiguration({}),
+                           self.metadata)
 
 
 if __name__ == '__main__':
