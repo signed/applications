@@ -2,10 +2,10 @@ import unittest
 from unittest import TestCase
 
 
-class ApplicationsHomeTest(TestCase):
+class TryStuffTest(TestCase):
     def test_replace_version_in_url(self):
         prep = ['%(installation_directory)s/' + x for x in ['bin', 'src']]
-        print(prep)
+        #print(prep)
 
     def test_dictionary_iteration(self):
         dictionary = {
@@ -13,7 +13,8 @@ class ApplicationsHomeTest(TestCase):
             'two': 2
         }
         for k, v in dictionary.iteritems():
-            print k, v
+            #print k, v
+            pass
 
     def test_mutable_default_parameter(self):
         self._method(True)
@@ -22,7 +23,7 @@ class ApplicationsHomeTest(TestCase):
     def _method(self, write, hmm={}):
         if write:
             hmm['key'] = 'value'
-        print hmm
+        #print hmm
 
 
 if __name__ == '__main__':
