@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='learning-python',
+    name='applications',
     version='',
     packages=[''],
     url='',
