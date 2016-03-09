@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     python-setuptools \
     python-dev \
     python-virtualenv
-RUN easy_install pip==6.0.8
+RUN easy_install pip==8.1.0
 RUN useradd -ms /bin/bash signed
 
 USER signed
