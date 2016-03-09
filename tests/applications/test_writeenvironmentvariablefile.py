@@ -40,8 +40,7 @@ class WriteEnvironmentVariableFileTest(TestCase):
     def _application(self):
         archive = {'url': self.url}
 
-        return Application(self.name, self.version, ArchiveConfiguration(archive), EnvironmentConfiguration({}),
-                           self.metadata)
+        return Application(self.name, self.version, ArchiveConfiguration(archive), EnvironmentConfiguration(self.metadata))
 
 
 if __name__ == '__main__':

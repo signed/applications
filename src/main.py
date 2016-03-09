@@ -23,7 +23,7 @@ def maven():
         'path': '%(installation_directory)s/bin'
     }
 
-    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc), etc)
+    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc))
 
 
 def oracle_java():
@@ -35,13 +35,13 @@ def oracle_java():
         'nesting_level': 1
     }
 
-    configuration = {
+    etc = {
         'path': '%(installation_directory)s/bin',
         'env': {
             'JAVA_HOME': '%(installation_directory)s'
         }
     }
-    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(configuration), configuration)
+    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc))
 
 
 def intellij():
@@ -56,7 +56,7 @@ def intellij():
     etc = {
         'path': '%(installation_directory)s/bin'
     }
-    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc), etc)
+    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc))
 
 
 def xmind():
@@ -70,14 +70,14 @@ def xmind():
     etc = {
         'path': '%(installation_directory)s/XMind_Linux_64bit'
     }
-    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc), etc)
+    return Application(name, version, ArchiveConfiguration(archive), EnvironmentConfiguration(etc))
 
 
 if __name__ == '__main__':
     applicationInstaller = applications.installer.create()
     applicationInstaller.ensure_environment_is_setup()
 
-    # applicationInstaller.install(oracle_java())
-    # applicationInstaller.install(maven())
+    applicationInstaller.install(oracle_java())
+    applicationInstaller.install(maven())
     # applicationInstaller.install(intellij())
     applicationInstaller.install(xmind())

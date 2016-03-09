@@ -42,10 +42,10 @@ class EnvironmentConfiguration:
         self.dictionary = dictionary
 
     def path_element(self):
-        return self.dictionary['path']
+        return self.dictionary.get('path')
 
     def environment_variables(self):
-        return self.dictionary['env']
+        return self.dictionary.get('env', {})
 
 
 class ArchiveConfiguration:
@@ -60,12 +60,11 @@ class ArchiveConfiguration:
 
 
 class Application:
-    def __init__(self, name, version, archive_configuration, environment_configuration, metadata=None):
+    def __init__(self, name, version, archive_configuration, environment_configuration):
         self.name = name
         self.version = version
         self.environment_configuration = environment_configuration
         self.archive_configuration = archive_configuration
-        self.metadata = metadata if metadata else {}
 
     def filename(self):
         parsed_url = urlparse.urlparse(self.url())
@@ -75,11 +74,11 @@ class Application:
     def archive(self):
         return self.archive_configuration
 
+    def environment(self):
+        return self.environment_configuration
+
     def url(self):
         return self.archive_configuration.url() % {'version': self.version}
-
-    def metadata_for(self, key):
-        return self.metadata.get(key)
 
 
 class InstallationStep(object):
@@ -104,13 +103,13 @@ class FileWriter:
 
 class WriteEnvironmentVariableFile(InstallationStep):
     def install(self, directory_structure, application, template_data):
-        env = application.metadata_for('env')
-        if env is None:
+        env = application.environment().environment_variables()
+        if not env:
             return
         path_to_env_file = os.path.join(directory_structure.configuration_path, application.name + '.env')
 
         lines = []
-        for key, value in env.items() :
+        for key, value in env.items():
             lines.append(key + '="' + value + '"')
 
         content_with_template_variables = '\n'.join(lines)
@@ -120,7 +119,7 @@ class WriteEnvironmentVariableFile(InstallationStep):
 
 class WritePathAdditionFile(InstallationStep):
     def install(self, directory_structure, application, template_data):
-        path = application.metadata_for('path')
+        path = application.environment().path_element()
         if path is not None:
             path_to_path_file = os.path.join(directory_structure.configuration_path, application.name + '.path')
             with open(path_to_path_file, 'wt') as path_file:
@@ -178,7 +177,8 @@ class ApplicationInstaller:
 
         archive_path = self.directory_structure.archive_path_for(application)
         target_directory_path = self.directory_structure.directory_for(application)
-        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path, application.archive().nesting_level())
+        nesting_level = application.archive().nesting_level()
+        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path, nesting_level)
 
 
 class DirectoryStructure:
