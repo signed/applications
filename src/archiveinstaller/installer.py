@@ -11,11 +11,14 @@ from os.path import join
 from archiveinstaller.downloader import ArchivingDownloader
 
 
-def create_installer():
-    download_cache_directory = os.path.join(os.getcwd(), 'downloads')
-    mkdir_p(download_cache_directory)
-    combined_downloader = ArchivingDownloader(download_cache_directory, archiveinstaller.downloader.Downloader())
-    return ApplicationInstaller(expanduser('~/apps/'), combined_downloader)
+def create_installer(app_directory, download_cache_directory=None):
+    downloader = archiveinstaller.downloader.Downloader()
+
+    if download_cache_directory:
+        mkdir_p(download_cache_directory)
+        downloader = ArchivingDownloader(download_cache_directory, downloader)
+
+    return ApplicationInstaller(app_directory, downloader)
 
 
 def _search_path_for(pathname_suffix):

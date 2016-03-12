@@ -5,6 +5,7 @@ import archiveinstaller.installer
 from archiveinstaller.installer import Application
 from archiveinstaller.installer import ArchiveConfiguration
 from archiveinstaller.installer import EnvironmentConfiguration
+from os.path import expanduser
 
 
 def maven():
@@ -74,7 +75,7 @@ def xmind():
 
 
 if __name__ == '__main__':
-    applicationInstaller = archiveinstaller.installer.create_installer()
+    applicationInstaller = archiveinstaller.installer.create_installer(expanduser('~/apps/'), expanduser('~/tmp/archiveinstaller'))
     applicationInstaller.ensure_environment_is_setup()
 
     applicationInstaller.install(oracle_java())
