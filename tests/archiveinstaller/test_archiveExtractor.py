@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from applications.extractor import ArchiveExtractor
+from archiveinstaller.extractor import ArchiveExtractor
 from hamcrest import *
 
 

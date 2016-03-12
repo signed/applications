@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from applications.installer import ArchiveConfiguration
+from archiveinstaller.installer import ArchiveConfiguration
 from hamcrest import *
 
 

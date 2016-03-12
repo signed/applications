@@ -1,11 +1,11 @@
 import unittest
 from unittest import TestCase
 
-from applications.installer import DirectoryStructure
-from applications.installer import FileWriter
-from applications.installer import WriteEnvironmentVariableFile
-from applications.installer import ArchiveConfiguration
-from applications.installer import EnvironmentConfiguration
+from archiveinstaller.installer import DirectoryStructure
+from archiveinstaller.installer import FileWriter
+from archiveinstaller.installer import WriteEnvironmentVariableFile
+from archiveinstaller.installer import ArchiveConfiguration
+from archiveinstaller.installer import EnvironmentConfiguration
 from main import Application
 from mock import mock
 from hamcrest import *

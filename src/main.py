@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import applications.downloader
-import applications.extractor
-import applications.installer
-from applications.installer import Application
-from applications.installer import ArchiveConfiguration
-from applications.installer import EnvironmentConfiguration
+import archiveinstaller.downloader
+import archiveinstaller.extractor
+import archiveinstaller.installer
+from archiveinstaller.installer import Application
+from archiveinstaller.installer import ArchiveConfiguration
+from archiveinstaller.installer import EnvironmentConfiguration
 
 
 def maven():
@@ -74,7 +74,7 @@ def xmind():
 
 
 if __name__ == '__main__':
-    applicationInstaller = applications.installer.create()
+    applicationInstaller = archiveinstaller.installer.create()
     applicationInstaller.ensure_environment_is_setup()
 
     applicationInstaller.install(oracle_java())

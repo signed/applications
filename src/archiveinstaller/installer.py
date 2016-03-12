@@ -2,8 +2,8 @@ import errno
 import sys
 import urlparse
 
-import applications.downloader
-import applications.extractor
+import archiveinstaller.downloader
+import archiveinstaller.extractor
 import os
 from abc import abstractmethod, ABCMeta
 from os.path import expanduser
@@ -14,8 +14,8 @@ def create():
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
     mkdir_p(download_cache_directory)
 
-    combined_downloader = applications.downloader.ArchivingDownloader(download_cache_directory,
-                                                                      applications.downloader.Downloader())
+    combined_downloader = archiveinstaller.downloader.ArchivingDownloader(download_cache_directory,
+                                                                          archiveinstaller.downloader.Downloader())
     return ApplicationInstaller(expanduser('~/apps/'), combined_downloader)
 
 
@@ -178,7 +178,7 @@ class ApplicationInstaller:
         archive_path = self.directory_structure.archive_path_for(application)
         target_directory_path = self.directory_structure.directory_for(application)
         nesting_level = application.archive().nesting_level()
-        applications.extractor.ArchiveExtractor().extract(archive_path, target_directory_path, nesting_level)
+        archiveinstaller.extractor.ArchiveExtractor().extract(archive_path, target_directory_path, nesting_level)
 
 
 class DirectoryStructure:
