@@ -4,7 +4,7 @@ from archiveinstaller.installer import EnvironmentConfiguration
 from unittest import TestCase
 
 from hamcrest import *
-from main import Application
+from archiveinstaller.installer import Application
 
 
 class ApplicationTest(TestCase):

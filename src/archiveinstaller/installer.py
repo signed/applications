@@ -156,7 +156,7 @@ class ApplicationInstaller:
         WriteEnvironmentVariableFile().install(self.directory_structure, application, template_data)
 
     def _write_rc_file(self):
-        path_to_rc_script = _search_path_for('shell/application.sh')
+        path_to_rc_script = _search_path_for('archiveinstaller/shell/application.sh')
         with open(path_to_rc_script, 'r') as rc_file:
             rc_file_template = rc_file.read()
         path_to_destination = os.path.join(self.directory_structure.path, 'application.rc')
