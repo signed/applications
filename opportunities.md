@@ -1,3 +1,6 @@
+- deploy to pypi
+  - https://hynek.me/articles/sharing-your-labor-of-love-pypi-quick-and-dirty/
+
 - checkout buildout
   - is it an alternative to virtual env?
   - is it a python build tool like gradle or gulp
