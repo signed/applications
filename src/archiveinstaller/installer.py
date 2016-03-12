@@ -8,14 +8,13 @@ import os
 from abc import abstractmethod, ABCMeta
 from os.path import expanduser
 from os.path import join
+from archiveinstaller.downloader import ArchivingDownloader
 
 
-def create():
+def create_installer():
     download_cache_directory = os.path.join(os.getcwd(), 'downloads')
     mkdir_p(download_cache_directory)
-
-    combined_downloader = archiveinstaller.downloader.ArchivingDownloader(download_cache_directory,
-                                                                          archiveinstaller.downloader.Downloader())
+    combined_downloader = ArchivingDownloader(download_cache_directory, archiveinstaller.downloader.Downloader())
     return ApplicationInstaller(expanduser('~/apps/'), combined_downloader)
 
 

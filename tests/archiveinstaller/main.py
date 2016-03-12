@@ -74,7 +74,7 @@ def xmind():
 
 
 if __name__ == '__main__':
-    applicationInstaller = archiveinstaller.installer.create()
+    applicationInstaller = archiveinstaller.installer.create_installer()
     applicationInstaller.ensure_environment_is_setup()
 
     applicationInstaller.install(oracle_java())
