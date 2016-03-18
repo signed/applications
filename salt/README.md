@@ -63,6 +63,7 @@ A configuration mechanism?
 
 ## modules ##
 There are significant differences between execution modules and state modules. Unfortunately the term module is a bit overloaded.
+[here](https://github.com/bechtoldt/salt-modules) is a repository with some custom modules.
 
 ### state module ###
 A state module tells the Salt Minion what the end result, or "state" should be.
