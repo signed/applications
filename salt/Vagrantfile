@@ -2,8 +2,19 @@
 # vi: set ft=ruby :
 
 $script = <<SCRIPT
-sudo apt-get install salt-minion python-pygit2 -y
+sudo apt-get install python-dev
+sudo easy_install pip
+sudo pip install virutalenvwrapper
+sudo apt-get install libffi-dev
+sudo apt-get install libgit2-dev
 SCRIPT
+#manual
+# setup virtualenvwrapper
+# activate virual env
+# pip install salt
+# pip install GitPython
+
+# sudo apt-get install salt-minion python-pygit2 -y
 
 VAGRANTFILE_API_VERSION = "2"
 
