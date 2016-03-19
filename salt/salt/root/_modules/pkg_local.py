@@ -6,7 +6,11 @@ TBD_APP_DIRECTORY = expanduser('~/apps/')
 log = logging.getLogger(__name__)
 
 try:
-    from archiveinstaller.installer import create_installer
+    from archiveinstaller.installer import (create_installer,
+                                            Application,
+                                            ArchiveConfiguration,
+                                            EnvironmentConfiguration)
+
     HAS_ARCHIVEINSTALLER = True
 except ImportError:
     HAS_ARCHIVEINSTALLER = False
@@ -28,7 +32,14 @@ def environment_setup():
     log.info('Checking if environment is setup')
     return False
 
+
 def setup_environment():
     log.info('setup environment')
     create_installer(TBD_APP_DIRECTORY).ensure_environment_is_setup()
-    pass
+
+
+def install(name, version, archive, etc):
+    archive = ArchiveConfiguration(archive)
+    environment = EnvironmentConfiguration(etc)
+    application = Application(name, version, archive, environment)
+    create_installer(TBD_APP_DIRECTORY).install(application)

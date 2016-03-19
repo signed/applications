@@ -25,8 +25,8 @@ def mod_init(low):
 
 
 def installed(name, version, archive={}, etc={}):
-    # name,result,changes,comment
     ret = {'name': name, 'changes': {}, 'result': True, 'comment': ''}
+    __salt__['pkg_local.install'](name, version, archive, etc)
     return ret
 
 
