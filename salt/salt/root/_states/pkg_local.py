@@ -4,13 +4,24 @@ import logging
 
 log = logging.getLogger(__name__)
 
+__virtualname__ = 'pkg_local'
+
+
+def __virtual__():
+    properly_loaded_indicator = 'pkg_local.properly_loaded'
+    if properly_loaded_indicator in __salt__:
+        return __virtualname__
+    return (False, __salt__.missing_fun_string(properly_loaded_indicator))
+
+_MOD_INIT_COMPLETED = True
+_MOD_INIT_PENDING = False
 
 def mod_init(low):
-    log.info('initialize state module for \'' + low['fun'] + '\'')
-
-    if low['name'] in ['maven', 'java'] :
-        return False # Call mod_init the next time a function is called in this state
-    return True
+    environment_setup = __salt__['pkg_local.environment_setup']()
+    if environment_setup:
+        return _MOD_INIT_COMPLETED
+    __salt__['pkg_local.setup_environment']()
+    return _MOD_INIT_COMPLETED
 
 
 def installed(name, version, archive={}, etc={}):
