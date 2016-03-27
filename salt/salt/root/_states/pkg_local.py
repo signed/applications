@@ -1,6 +1,6 @@
 import salt.exceptions
-
 import logging
+import salt.ext.six as six
 
 log = logging.getLogger(__name__)
 
@@ -13,8 +13,10 @@ def __virtual__():
         return __virtualname__
     return (False, __salt__.missing_fun_string(properly_loaded_indicator))
 
+
 _MOD_INIT_COMPLETED = True
 _MOD_INIT_PENDING = False
+
 
 def mod_init(low):
     environment_setup = __salt__['pkg_local.environment_setup']()
@@ -25,6 +27,10 @@ def mod_init(low):
 
 
 def installed(name, version, archive={}, etc={}):
+    if not isinstance(version, six.string_types):
+        raise salt.exceptions.SaltInvocationError(
+                'Argument "version" has to be a string but was ' + str(type(version)) + '.')
+
     ret = {'name': name, 'changes': {}, 'result': True, 'comment': ''}
     __salt__['pkg_local.install'](name, version, archive, etc)
     return ret
